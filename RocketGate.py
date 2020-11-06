@@ -964,3 +964,14 @@ class GatewayService:
             results = self.PerformConfirmation(request, response)
         return results				# Return results
 
+######################################################################
+#
+#       PerformCardUpload() - Upload card data to the servers.
+#
+######################################################################
+#
+    def PerformCardUpload(self, request, response):
+        request.Set(GatewayRequest.TRANSACTION_TYPE, "CARDUPLOAD")
+        results = self.PerformTransaction(request, response)
+        return results                          # Return results
+
