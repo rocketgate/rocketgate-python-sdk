@@ -22,8 +22,14 @@
 # including, without limitation, damages resulting from loss of use, data or profits, and
 # whether or not advised of the possibility of damage, regardless of the theory of liability.
 #
-
 from RocketGate import *
+import datetime
+
+the_time = datetime.datetime.now().strftime("%Y%m%d.%H%M%S")
+
+cust_id = the_time + ".UploadCardTest"
+merch_id = "1"
+merch_password = "testpassword"
 
 request = GatewayRequest()
 response = GatewayResponse()
@@ -32,25 +38,25 @@ service = GatewayService()
 #
 #	Setup the Purchase request.
 #
-request.Set(GatewayRequest.MERCHANT_ID, 1)
-request.Set(GatewayRequest.MERCHANT_PASSWORD, "testpassword")
+request.Set(GatewayRequest.MERCHANT_ID, merch_id)
+request.Set(GatewayRequest.MERCHANT_PASSWORD, merch_password)
 
-request.Set(GatewayRequest.MERCHANT_CUSTOMER_ID, "PythonTestCust.1")
+request.Set(GatewayRequest.MERCHANT_CUSTOMER_ID, cust_id)
 
 request.Set(GatewayRequest.CARDNO, "4000000000001091")
 request.Set(GatewayRequest.EXPIRE_MONTH, "02")
 request.Set(GatewayRequest.EXPIRE_YEAR, "2030")
 
-request.Set(GatewayRequest.CUSTOMER_FIRSTNAME, "Firstname")
-request.Set(GatewayRequest.CUSTOMER_LASTNAME, "Lastname")
-request.Set(GatewayRequest.EMAIL, "testPython@bogusdomain.com")
-request.Set(GatewayRequest.CUSTOMER_PASSWORD, "ThePassword")
-
-request.Set(GatewayRequest.BILLING_ADDRESS, "1234 Python Street")
-request.Set(GatewayRequest.BILLING_CITY, "Stephens City")
-request.Set(GatewayRequest.BILLING_STATE, "Virginia")
-request.Set(GatewayRequest.BILLING_ZIPCODE, "22655")
+request.Set(GatewayRequest.BILLING_ADDRESS, "123 Some Street")
+request.Set(GatewayRequest.BILLING_CITY, "Las Vegas")
+request.Set(GatewayRequest.BILLING_STATE, "Nevada")
+request.Set(GatewayRequest.BILLING_ZIPCODE, "89141")
 request.Set(GatewayRequest.BILLING_COUNTRY, "US")
+
+request.Set(GatewayRequest.CUSTOMER_FIRSTNAME, "Monty")
+request.Set(GatewayRequest.CUSTOMER_LASTNAME, "Python")
+request.Set(GatewayRequest.CUSTOMER_PASSWORD, "ThePassword")
+request.Set(GatewayRequest.EMAIL, "python_user@rocketgate.com")
 
 #
 #      Setup test parameters in the service.
@@ -61,13 +67,13 @@ service.SetTestMode(1)
 #      Perform the Purchase transaction.
 #
 status = service.PerformCardUpload(request, response)
-if (status):
-    print ("Upload succeeded")
-    print ("Response Code: ", response.Get(GatewayResponse.RESPONSE_CODE))
-    print ("Reason Code: ", response.Get(GatewayResponse.REASON_CODE))
-    print ("CardHash: ", response.Get(GatewayResponse.CARD_HASH))
+if status:
+    print("Upload succeeded")
+    print("Response Code: ", response.Get(GatewayResponse.RESPONSE_CODE))
+    print("Reason Code: ", response.Get(GatewayResponse.REASON_CODE))
+    print("CardHash: ", response.Get(GatewayResponse.CARD_HASH))
 else:
-    print ("Upload failed")
-    print ("Response Code: ", response.Get(GatewayResponse.RESPONSE_CODE))
-    print ("Reason Code: ", response.Get(GatewayResponse.REASON_CODE))
-    print ("Exception: ", response.Get(GatewayResponse.EXCEPTION))
+    print("Upload failed")
+    print("Response Code: ", response.Get(GatewayResponse.RESPONSE_CODE))
+    print("Reason Code: ", response.Get(GatewayResponse.REASON_CODE))
+    print("Exception: ", response.Get(GatewayResponse.EXCEPTION))

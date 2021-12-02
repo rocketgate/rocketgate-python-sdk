@@ -22,8 +22,9 @@
 # including, without limitation, damages resulting from loss of use, data or profits, and
 # whether or not advised of the possibility of damage, regardless of the theory of liability.
 #
-
 from RocketGate import *
+
+cust_id = "Customer-1"
 
 request = GatewayRequest()
 response = GatewayResponse()
@@ -34,17 +35,18 @@ service = GatewayService()
 #
 request.Set(GatewayRequest.MERCHANT_ID, 1)
 request.Set(GatewayRequest.MERCHANT_PASSWORD, "testpassword")
-request.Set(GatewayRequest.CARDNO, "4111-1111-1111-1111")
 
-request.Set(GatewayRequest.MERCHANT_CUSTOMER_ID, "Customer-1")
+request.Set(GatewayRequest.MERCHANT_CUSTOMER_ID, cust_id)
 
-request.Set(GatewayRequest.BILLING_ADDRESS, "317 Clydesdale Drive")
-request.Set(GatewayRequest.BILLING_CITY, "Stephens City")
-request.Set(GatewayRequest.BILLING_STATE, "Virginia")
-request.Set(GatewayRequest.BILLING_ZIPCODE, "22655")
+request.Set(GatewayRequest.CARDNO, "4111111111111111")
+
+request.Set(GatewayRequest.BILLING_ADDRESS, "123 Some Street")
+request.Set(GatewayRequest.BILLING_CITY, "Las Vegas")
+request.Set(GatewayRequest.BILLING_STATE, "Nevada")
+request.Set(GatewayRequest.BILLING_ZIPCODE, "89141")
 request.Set(GatewayRequest.BILLING_COUNTRY, "US")
 
-request.Set(GatewayRequest.EMAIL, "darcy@rocketgate.com")
+request.Set(GatewayRequest.EMAIL, "python_user@rocketgate.com")
 request.Set(GatewayRequest.IPADDRESS, "68.224.133.117")
 
 #
@@ -56,15 +58,15 @@ service.SetTestMode(1)
 #      Perform the scrub transaction.
 #
 status = service.PerformCardScrub(request, response)
-if (status):
-    print ("CardScrub succeeded")
-    print ("Response Code: ", response.Get(GatewayResponse.RESPONSE_CODE))
-    print ("Reason Code: ", response.Get(GatewayResponse.REASON_CODE))
-    print ("Scrub: ", response.Get(GatewayResponse.SCRUB_RESULTS))
+if status:
+    print("CardScrub succeeded")
+    print("Response Code: ", response.Get(GatewayResponse.RESPONSE_CODE))
+    print("Reason Code: ", response.Get(GatewayResponse.REASON_CODE))
+    print("Scrub: ", response.Get(GatewayResponse.SCRUB_RESULTS))
 else:
-    print ("CardScrub failed")
-    print ("Response Code: ", response.Get(GatewayResponse.RESPONSE_CODE))
-    print ("Reason Code: ", response.Get(GatewayResponse.REASON_CODE))
-    print ("Scrub: ", response.Get(GatewayResponse.SCRUB_RESULTS))
-    print ("Exception: ", response.Get(GatewayResponse.EXCEPTION))
+    print("CardScrub failed")
+    print("Response Code: ", response.Get(GatewayResponse.RESPONSE_CODE))
+    print("Reason Code: ", response.Get(GatewayResponse.REASON_CODE))
+    print("Scrub: ", response.Get(GatewayResponse.SCRUB_RESULTS))
+    print("Exception: ", response.Get(GatewayResponse.EXCEPTION))
 
