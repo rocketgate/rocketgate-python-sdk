@@ -22,9 +22,20 @@
 # including, without limitation, damages resulting from loss of use, data or profits, and
 # whether or not advised of the possibility of damage, regardless of the theory of liability.
 #
-
+import datetime
 from RocketGate import *
 
+
+the_time = datetime.datetime.now().strftime("%Y%m%d.%H%M%S")
+
+cust_id = the_time + ".PythonTest"
+inv_id = the_time + ".SaleTest"
+merch_id = "1"
+merch_password = "testpassword"
+
+#
+# Allocate the objects we need for the test.
+#
 request = GatewayRequest()
 response = GatewayResponse()
 service = GatewayService()
@@ -32,39 +43,38 @@ service = GatewayService()
 #
 #	Setup the Purchase request.
 #
-request.Set(GatewayRequest.MERCHANT_ID, 1)
-request.Set(GatewayRequest.MERCHANT_PASSWORD, "testpassword")
+request.Set(GatewayRequest.MERCHANT_ID, merch_id)
+request.Set(GatewayRequest.MERCHANT_PASSWORD, merch_password)
 
-request.Set(GatewayRequest.CARDNO, "4111-1111-1111-1111")
+request.Set(GatewayRequest.MERCHANT_CUSTOMER_ID, cust_id)
+request.Set(GatewayRequest.MERCHANT_INVOICE_ID, inv_id)
+
+request.Set(GatewayRequest.AMOUNT, 9.99)
+request.Set(GatewayRequest.CURRENCY, "USD")
+
+request.Set(GatewayRequest.CARDNO, "4111111111111111")
 request.Set(GatewayRequest.EXPIRE_MONTH, "02")
 request.Set(GatewayRequest.EXPIRE_YEAR, "2030")
-request.Set(GatewayRequest.AMOUNT, 3.99)
-
-request.Set(GatewayRequest.MERCHANT_CUSTOMER_ID, "PythonTestCust.1")
-request.Set(GatewayRequest.MERCHANT_INVOICE_ID, "PythonTestInv-1")
-
-request.Set(GatewayRequest.CUSTOMER_FIRSTNAME, "Firstname")
-request.Set(GatewayRequest.CUSTOMER_LASTNAME, "Lastname")
-
-request.Set(GatewayRequest.BILLING_ADDRESS, "1234 Python Street")
-request.Set(GatewayRequest.BILLING_CITY, "Stephens City")
-request.Set(GatewayRequest.BILLING_STATE, "Virginia")
-request.Set(GatewayRequest.BILLING_ZIPCODE, "22655")
-request.Set(GatewayRequest.BILLING_COUNTRY, "US")
-request.Set(GatewayRequest.AVS_CHECK, "IGNORE")
-
 request.Set(GatewayRequest.CVV2, "999")
-request.Set(GatewayRequest.CVV2_CHECK, "IGNORE")
 
-request.Set(GatewayRequest.EMAIL, "testPython@bogusdomain.com")
+
+request.Set(GatewayRequest.BILLING_ADDRESS, "123 Some Street")
+request.Set(GatewayRequest.BILLING_CITY, "Las Vegas")
+request.Set(GatewayRequest.BILLING_STATE, "Nevada")
+request.Set(GatewayRequest.BILLING_ZIPCODE, "89141")
+request.Set(GatewayRequest.BILLING_COUNTRY, "US")
+
+request.Set(GatewayRequest.CUSTOMER_FIRSTNAME, "Monty")
+request.Set(GatewayRequest.CUSTOMER_LASTNAME, "Python")
+request.Set(GatewayRequest.EMAIL, "python_user@rocketgate.com")
 request.Set(GatewayRequest.IPADDRESS, "68.224.133.117")
+
+#
+# Risk/Scrub Request Setting
+#
+request.Set(GatewayRequest.AVS_CHECK, "IGNORE")
+request.Set(GatewayRequest.CVV2_CHECK, "IGNORE")
 request.Set(GatewayRequest.SCRUB, "IGNORE")
-#request.Set(GatewayRequest.SCRUB, "YES")
-
-#request.Set(GatewayRequest.REBILL_START, 3)
-#request.Set(GatewayRequest.REBILL_FREQUENCY, "MONTHLY")
-#request.Set(GatewayRequest.REBILL_AMOUNT, 39.99)
-
 
 #
 #      Setup test parameters in the service.
@@ -75,24 +85,25 @@ service.SetTestMode(1)
 #      Perform the Purchase transaction.
 #
 status = service.PerformPurchase(request, response)
-if (status):
-    print ("Purchase succeeded")
-    print ("GUID: ", response.Get(GatewayResponse.TRANSACT_ID))
-    print ("Response Code: ", response.Get(GatewayResponse.RESPONSE_CODE))
-    print ("Reason Code: ", response.Get(GatewayResponse.REASON_CODE))
-    print ("AuthNo: ", response.Get(GatewayResponse.AUTH_NO))
-    print ("AVS: ", response.Get(GatewayResponse.AVS_RESPONSE))
-    print ("CVV2: ", response.Get(GatewayResponse.CVV2_CODE))
-    print ("CardHash: ", response.Get(GatewayResponse.CARD_HASH))
-    print ("CardRegion: ", response.Get(GatewayResponse.CARD_REGION))
-    print ("CardDescription: ", response.Get(GatewayResponse.CARD_DESCRIPTION))
-    print ("Account: ", response.Get(GatewayResponse.MERCHANT_ACCOUNT))
-    print ("Scrub: ", response.Get(GatewayResponse.SCRUB_RESULTS))
+if status:
+    print("Purchase succeeded")
+    print("GUID: ", response.Get(GatewayResponse.TRANSACT_ID))
+    print("Response Code: ", response.Get(GatewayResponse.RESPONSE_CODE))
+    print("Reason Code: ", response.Get(GatewayResponse.REASON_CODE))
+    print("AuthNo: ", response.Get(GatewayResponse.AUTH_NO))
+    print("AVS: ", response.Get(GatewayResponse.AVS_RESPONSE))
+    print("CVV2: ", response.Get(GatewayResponse.CVV2_CODE))
+    print("Card Hash: ", response.Get(GatewayResponse.CARD_HASH))
+    print("Card Region: ", response.Get(GatewayResponse.CARD_REGION))
+    print("Card Description: ", response.Get(GatewayResponse.CARD_DESCRIPTION))
+    print("Account: ", response.Get(GatewayResponse.MERCHANT_ACCOUNT))
+    print("Scrub: ", response.Get(GatewayResponse.SCRUB_RESULTS))
+    
 else:
-    print ("Purchase failed")
-    print ("GUID: ", response.Get(GatewayResponse.TRANSACT_ID))
-    print ("Response Code: ", response.Get(GatewayResponse.RESPONSE_CODE))
-    print ("Reason Code: ", response.Get(GatewayResponse.REASON_CODE))
-    print ("Exception: ", response.Get(GatewayResponse.EXCEPTION))
-    print ("Scrub: ", response.Get(GatewayResponse.SCRUB_RESULTS))
+    print("Purchase failed")
+    print("GUID: ", response.Get(GatewayResponse.TRANSACT_ID))
+    print("Response Code: ", response.Get(GatewayResponse.RESPONSE_CODE))
+    print("Reason Code: ", response.Get(GatewayResponse.REASON_CODE))
+    print("Exception: ", response.Get(GatewayResponse.EXCEPTION))
+    print("Scrub: ", response.Get(GatewayResponse.SCRUB_RESULTS))
 

@@ -22,61 +22,56 @@
 # including, without limitation, damages resulting from loss of use, data or profits, and
 # whether or not advised of the possibility of damage, regardless of the theory of liability.
 #
-
-#
-# Example $9.99 USD monthly subscription purchase.
-# Subsequently, the subscription is set to cancel at the end of the month.
-#
-
 import datetime
 from RocketGate import *
+
+the_time = datetime.datetime.now().strftime("%Y%m%d.%H%M%S")
+
+cust_id = the_time + ".PythonTest"
+inv_id = the_time + ".CancelTest"
+merch_id = "1"
+merch_password = "testpassword"
 
 request = GatewayRequest()
 response = GatewayResponse()
 service = GatewayService()
 
-merchID = "1";
-merchPassword = "testpassword";
-
 # For example/testing, we set the order id and customer as the unix timestamp as a convienent sequencing value
 # appending a test name to the order id to facilitate some clarity when reviewing the tests
-theTime = datetime.datetime.now().strftime("%s")
-custID = theTime + ".PythonTest";
-invID = theTime + ".CancelTest";
+
 
 #
-#	Setup the nly request.
+# Example $9.99 USD monthly subscription purchase.
+# Subsequently, the subscription is set to cancel at the end of the month.
 #
-request.Set(GatewayRequest.MERCHANT_ID, merchID)
-request.Set(GatewayRequest.MERCHANT_PASSWORD, merchPassword)
+request.Set(GatewayRequest.MERCHANT_ID, merch_id)
+request.Set(GatewayRequest.MERCHANT_PASSWORD, merch_password)
 
-request.Set(GatewayRequest.MERCHANT_CUSTOMER_ID, custID)
-request.Set(GatewayRequest.MERCHANT_INVOICE_ID, invID)
+request.Set(GatewayRequest.MERCHANT_CUSTOMER_ID, cust_id)
+request.Set(GatewayRequest.MERCHANT_INVOICE_ID, inv_id)
 
-# $9.99/month subscription
-request.Set(GatewayRequest.CURRENCY, "USD")
 request.Set(GatewayRequest.AMOUNT, 9.99)
+request.Set(GatewayRequest.CURRENCY, "USD")
 request.Set(GatewayRequest.REBILL_FREQUENCY, "MONTHLY")
 
-request.Set(GatewayRequest.CARDNO, "4111-1111-1111-1111")
+request.Set(GatewayRequest.CARDNO, "4111111111111111")
 request.Set(GatewayRequest.EXPIRE_MONTH, "02")
 request.Set(GatewayRequest.EXPIRE_YEAR, "2030")
 request.Set(GatewayRequest.CVV2, "999")
+request.Set(GatewayRequest.CVV2_CHECK, "IGNORE")
 
-request.Set(GatewayRequest.CUSTOMER_FIRSTNAME, "Joe")
-request.Set(GatewayRequest.CUSTOMER_LASTNAME, "PythonTester")
-request.Set(GatewayRequest.EMAIL, "Pythontest@fakedomain.com")
-request.Set(GatewayRequest.IPADDRESS, "68.224.133.117")
-
-request.Set(GatewayRequest.BILLING_ADDRESS, "123 Main St.")
+request.Set(GatewayRequest.BILLING_ADDRESS, "123 Some Street")
 request.Set(GatewayRequest.BILLING_CITY, "Las Vegas")
-request.Set(GatewayRequest.BILLING_STATE, "NV")
+request.Set(GatewayRequest.BILLING_STATE, "Nevada")
 request.Set(GatewayRequest.BILLING_ZIPCODE, "89141")
 request.Set(GatewayRequest.BILLING_COUNTRY, "US")
-
-# Risk/Scrub Request Setting
 request.Set(GatewayRequest.AVS_CHECK, "IGNORE")
-request.Set(GatewayRequest.CVV2_CHECK, "IGNORE")
+
+request.Set(GatewayRequest.CUSTOMER_FIRSTNAME, "Monty")
+request.Set(GatewayRequest.CUSTOMER_LASTNAME, "Python")
+request.Set(GatewayRequest.EMAIL, "python_user@rocketgate.com")
+request.Set(GatewayRequest.IPADDRESS, "68.224.133.117")
+
 request.Set(GatewayRequest.SCRUB, "IGNORE")
 
 #
@@ -88,17 +83,20 @@ service.SetTestMode(1)
 #      Perform the Purchase transaction.
 #
 status = service.PerformPurchase(request, response)
-if (status):
-    print ("Purchase succeeded")
-    print ("GUID: ", response.Get(GatewayResponse.TRANSACT_ID))
-    print ("Response Code: ", response.Get(GatewayResponse.RESPONSE_CODE))
-    print ("Reason Code: ", response.Get(GatewayResponse.REASON_CODE))
-    print ("AuthNo: ", response.Get(GatewayResponse.AUTH_NO))
-    print ("AVS: ", response.Get(GatewayResponse.AVS_RESPONSE))
-    print ("CVV2: ", response.Get(GatewayResponse.CVV2_CODE))
-    print ("CardHash: ", response.Get(GatewayResponse.CARD_HASH))
-    print ("Account: ", response.Get(GatewayResponse.MERCHANT_ACCOUNT))
-    print ("Scrub: ", response.Get(GatewayResponse.SCRUB_RESULTS))
+
+if status:
+    print("Purchase succeeded")
+    print("GUID: ", response.Get(GatewayResponse.TRANSACT_ID))
+    print("Response Code: ", response.Get(GatewayResponse.RESPONSE_CODE))
+    print("Reason Code: ", response.Get(GatewayResponse.REASON_CODE))
+    print("AuthNo: ", response.Get(GatewayResponse.AUTH_NO))
+    print("AVS: ", response.Get(GatewayResponse.AVS_RESPONSE))
+    print("CVV2: ", response.Get(GatewayResponse.CVV2_CODE))
+    print("Card Hash: ", response.Get(GatewayResponse.CARD_HASH))
+    print("Card Region: ", response.Get(GatewayResponse.CARD_REGION))
+    print("Card Description: ", response.Get(GatewayResponse.CARD_DESCRIPTION))
+    print("Account: ", response.Get(GatewayResponse.MERCHANT_ACCOUNT))
+    print("Scrub: ", response.Get(GatewayResponse.SCRUB_RESULTS))
 
     # CANCEL MEMBERSHIP
     ##
@@ -107,26 +105,27 @@ if (status):
     ##  The key values required are MERCHANT_CUSTOMER_ID and MERCHANT_INVOICE_ID.
     ## 
     request = GatewayRequest()
-    request.Set(GatewayRequest.MERCHANT_ID, merchID)
-    request.Set(GatewayRequest.MERCHANT_PASSWORD, merchPassword)
+    request.Set(GatewayRequest.MERCHANT_ID, merch_id)
+    request.Set(GatewayRequest.MERCHANT_PASSWORD, merch_password)
 
-    request.Set(GatewayRequest.MERCHANT_CUSTOMER_ID, custID)
-    request.Set(GatewayRequest.MERCHANT_INVOICE_ID, invID)
+    request.Set(GatewayRequest.MERCHANT_CUSTOMER_ID, cust_id)
+    request.Set(GatewayRequest.MERCHANT_INVOICE_ID, inv_id)
 
     status = service.PerformRebillCancel(request, response)
-    if (status):
-        print ("Cancel succeeded")
+
+    if status:
+        print("Cancel succeeded")
     else:
-        print ("Cancel failed")
-        print ("Response Code: ", response.Get(GatewayResponse.RESPONSE_CODE))
-        print ("Reason Code: ", response.Get(GatewayResponse.REASON_CODE))
+        print("Cancel failed")
+        print("Response Code: ", response.Get(GatewayResponse.RESPONSE_CODE))
+        print("Reason Code: ", response.Get(GatewayResponse.REASON_CODE))
 
 else:
-    print ("Purchase failed\n")
-    print ("GUID: ", response.Get(GatewayResponse.TRANSACT_ID))
-    print ("Response Code: ", response.Get(GatewayResponse.RESPONSE_CODE))
-    print ("Reason Code: ", response.Get(GatewayResponse.REASON_CODE))
-    print ("Exception: ", response.Get(GatewayResponse.EXCEPTION))
-    print ("Scrub: ", response.Get(GatewayResponse.SCRUB_RESULTS))
+    print("Purchase failed\n")
+    print("GUID: ", response.Get(GatewayResponse.TRANSACT_ID))
+    print("Response Code: ", response.Get(GatewayResponse.RESPONSE_CODE))
+    print("Reason Code: ", response.Get(GatewayResponse.REASON_CODE))
+    print("Exception: ", response.Get(GatewayResponse.EXCEPTION))
+    print("Scrub: ", response.Get(GatewayResponse.SCRUB_RESULTS))
     exit()
 
