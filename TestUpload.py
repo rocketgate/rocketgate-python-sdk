@@ -1,7 +1,7 @@
 #! /usr/bin/env python
 #
 # Copyright notice:
-# (c) Copyright 2020 RocketGate
+# (c) Copyright 2024 RocketGate
 # All rights reserved.
 #
 # The copyright notice must not be removed without specific, prior
@@ -66,6 +66,7 @@ service.SetTestMode(1)
 #
 #      Perform the Purchase transaction.
 #
+
 status = service.PerformCardUpload(request, response)
 if status:
     print("Upload succeeded")

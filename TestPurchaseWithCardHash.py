@@ -1,7 +1,7 @@
 #! /usr/bin/env python
 #
 # Copyright notice:
-# (c) Copyright 2020 RocketGate
+# (c) Copyright 2024 RocketGate
 # All rights reserved.
 #
 # The copyright notice must not be removed without specific, prior
@@ -37,16 +37,16 @@ response = GatewayResponse()
 service = GatewayService()
 
 merchID = "1";
-merchPassword = "testpassword";
+merchPassword = "testpassword"
 
-# For example/testing, we set the order id and customer as the unix timestamp as a convienent sequencing value
+# For example/testing, we set the order id and customer as the unix timestamp as a convenient sequencing value
 # appending a test name to the order id to facilitate some clarity when reviewing the tests
 theTime = datetime.datetime.now().strftime("%s")
-custID = theTime + ".PythonTest";
-invID = theTime + ".CardHashTest";
+custID = theTime + ".PythonTest"
+invID = theTime + ".CardHashTest"
 
 #
-#	Setup the nly request.
+#	Setup the only request.
 #
 request.Set(GatewayRequest.MERCHANT_ID, merchID)
 request.Set(GatewayRequest.MERCHANT_PASSWORD, merchPassword)
