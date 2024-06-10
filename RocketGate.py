@@ -24,9 +24,10 @@
 import xml.sax
 import http.client
 import random
-import ssl
+import errno
 import socket
-
+import ssl
+from urllib.parse import urlsplit
 
 class GatewayRequest:
     ######################################################################
@@ -87,6 +88,8 @@ class GatewayRequest:
     GATEWAY_SERVLET = "gatewayServlet"
     GATEWAY_CONNECT_TIMEOUT = "gatewayConnectTimeout"
     GATEWAY_SERVER = "gatewayServer"
+    GATEWAY_SERVLET = "gatewayServlet"
+    GATEWAY_PORTNO = "gatewayPortNo"
     GATEWAY_READ_TIMEOUT = "gatewayReadTimeout"
     GENERATE_POSTBACK = "generatePostback"
 
@@ -639,8 +642,8 @@ class GatewayService:
         #
         #	Gather overrides for transaction.
         #
-        urlServlet = request.Get("gatewayServlet")
-        urlPortNo = request.Get("portNo")
+        urlServlet = request.Get(GatewayRequest.GATEWAY_SERVLET)
+        urlPortNo = request.Get(GatewayRequest.GATEWAY_PORTNO)
 
         #
         #	Determine the final servlet name.
@@ -796,6 +799,24 @@ class GatewayService:
     def PerformTransaction(self, request, response):
 
         #
+#	If EMBEDDED_FIELDS_TOKEN is provided, send the request to the corresponding endpoint
+#
+        fullUrl = request.Get(GatewayRequest.EMBEDDED_FIELDS_TOKEN)
+        if fullUrl is not None:
+            try:
+                parsedUrl = urlsplit(fullUrl)
+                request.Set(GatewayRequest.GATEWAY_SERVER, parsedUrl.hostname)
+                request.Set(GatewayRequest.GATEWAY_SERVLET,
+                            parsedUrl.path + ("?" + parsedUrl.query if parsedUrl.query is not None else ""))
+                if parsedUrl.port is not None:
+                    request.Set(GatewayRequest.GATEWAY_PORTNO, parsedUrl.port)
+            except Exception as ex:
+                response.Set(GatewayResponse.EXCEPTION, str(ex))
+                response.Set(GatewayResponse.RESPONSE_CODE, 4)
+                response.Set(GatewayResponse.REASON_CODE, 401)
+                return 4    # Validation error: Invalid URL
+
+#
         #	If the request specifies a server name, use it.
         #	Otherwise, use the default.
         #
