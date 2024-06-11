@@ -25,7 +25,6 @@
 import datetime
 from RocketGate import *
 
-
 the_time = datetime.datetime.now().strftime("%Y%m%d.%H%M%S")
 
 cust_id = the_time + ".PythonTest"
@@ -79,7 +78,6 @@ service.SetTestMode(1)
 
 #
 #      Perform the Auth-Only transaction.
-#
 status = service.PerformAuthOnly(request, response)
 
 if status:
@@ -95,7 +93,7 @@ if status:
     print("Card Description: ", response.Get(GatewayResponse.CARD_DESCRIPTION))
     print("Account: ", response.Get(GatewayResponse.MERCHANT_ACCOUNT))
     print("Scrub: ", response.Get(GatewayResponse.SCRUB_RESULTS))
-    
+
 else:
     print("Auth Only failed")
     print("GUID: ", response.Get(GatewayResponse.TRANSACT_ID))
@@ -103,4 +101,3 @@ else:
     print("Reason Code: ", response.Get(GatewayResponse.REASON_CODE))
     print("Exception: ", response.Get(GatewayResponse.EXCEPTION))
     print("Scrub: ", response.Get(GatewayResponse.SCRUB_RESULTS))
-

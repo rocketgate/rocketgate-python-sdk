@@ -110,8 +110,7 @@ else:
 request = GatewayRequest()
 request.Set(GatewayRequest.MERCHANT_ID, merch_id)
 request.Set(GatewayRequest.MERCHANT_PASSWORD, merch_password)
-request.Set(GatewayRequest.TRANSACT_ID, \
-              response.Get(GatewayResponse.TRANSACT_ID))
+request.Set(GatewayRequest.TRANSACT_ID, response.Get(GatewayResponse.TRANSACT_ID))
 
 #
 #	Perform the void transaction.

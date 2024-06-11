@@ -36,7 +36,7 @@ request = GatewayRequest()
 response = GatewayResponse()
 service = GatewayService()
 
-# For example/testing, we set the order id and customer as the unix timestamp as a convienent sequencing value
+# For example/testing, we set the order id and customer as the unix timestamp as a convenient sequencing value
 # appending a test name to the order id to facilitate some clarity when reviewing the tests
 
 
