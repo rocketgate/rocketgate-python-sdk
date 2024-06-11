@@ -40,7 +40,7 @@ class GatewayRequest:
     ######################################################################
     #
     VERSION_INDICATOR = "version"
-    VERSION_NUMBER = "PY3.5"
+    VERSION_NUMBER = "PY3.6"
 
     GATEWAY_URL = "gatewayURL"
     GATEWAY_SERVLET = "gatewayServlet"
