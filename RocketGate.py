@@ -39,192 +39,213 @@ class GatewayRequest:
     #
     ######################################################################
     #
-    VERSION_INDICATOR = "version"
-    VERSION_NUMBER = "PY3.6"
 
-    GATEWAY_URL = "gatewayURL"
-    GATEWAY_SERVLET = "gatewayServlet"
-    GATEWAY_CONNECT_TIMEOUT = "gatewayConnectTimeout"
-    GATEWAY_SERVER = "gatewayServer"
-    GATEWAY_PORTNO = "gatewayPortNo"
-    GATEWAY_READ_TIMEOUT = "gatewayReadTimeout"
-
-    DOCUMENT_BASE = "gatewayRequest"
+    ACCOUNT_HOLDER = "accountHolder"
+    ACCOUNT_NO = "accountNo"
+    ACCT_COMPROMISED_SCRUB = "ACCTCOMPROMISEDSCRUB"
+    AFFILIATE = "AFFILIATE"
+    ALLOW_CARD_DEBIT_CREDIT = "ALLOW_CARD_DEBIT_CREDIT"
     AMOUNT = "AMOUNT"
     AVS_CHECK = "AVSCHECK"
+    BANK_CARD_DEBIT_CREDIT = "BANK_CARD_DEBIT_CREDIT"
+    BANK_CATEGORY = "BANKCATEGORY"
+    BANK_COUNTRY = "BANKCOUNTRY"
+    BANK_NO_MEMBERSHIP = "BANKNOMEMBERSHIP"
+    BATCH_DURATION = "BATCHDURATION"
+    BATCH_RECLOSE_GUID = "BATCHRECLOSEGUID"
+    BATCH_TIME_OFFSET = "BATCHTIMEOFFSET"
+    BATCH_UPLOAD = "BATCHUPLOAD"
     BILLING_ADDRESS = "BILLINGADDRESS"
     BILLING_CITY = "BILLINGCITY"
     BILLING_COUNTRY = "BILLINGCOUNTRY"
     BILLING_STATE = "BILLINGSTATE"
-    BILLING_ZIPCODE = "BILLINGZIPCODE"
-    CARDNO = "CARDNO"
-    CURRENCY = "CURRENCY"
-    CUSTOMER_FIRSTNAME = "CUSTOMERFIRSTNAME"
-    CUSTOMER_LASTNAME = "CUSTOMERLASTNAME"
-    CVV2 = "CVV2"
-    CVV2_CHECK = "CVV2CHECK"
-    EMAIL = "EMAIL"
-    EXPIRE_MONTH = "EXPIREMONTH"
-    EXPIRE_YEAR = "EXPIREYEAR"
-    IPADDRESS = "IPADDRESS"
-    MERCHANT_ACCOUNT = "MERCHANTACCOUNT"
-    MERCHANT_ACCOUNT_INDEX = "MERCHANTACCOUNTINDEX"
-    MERCHANT_CUSTOMER_ID = "MERCHANTCUSTOMERID"
-    MERCHANT_INVOICE_ID = "MERCHANTINVOICEID"
-    MERCHANT_ID = "MERCHANTID"
-    MERCHANT_PASSWORD = "MERCHANTPASSWORD"
-    POSTING_IPADDRESS = "POSTINGIPADDRESS"
-    REFERENCE_GUID = "REFERENCEGUID"
-    TRANSACTION_TYPE = "TRANSACTIONTYPE"
-    UDF01 = "UDF01"
-    UDF02 = "UDF02"
-    COF_FRAMEWORK = "COFFRAMEWORK"
-    SS_NUMBER = "SSNUMBER"
-    SCRUB = "SCRUB"
-    IP2LOCATION_COUNTRY = "IP2LOCATIONCOUNTRY"
-    IP2LOCATION_USAGE_TYPE = "IP2LOCATIONUSAGETYPE"
-    BANK_COUNTRY = "BANKCOUNTRY"
-    SCRUB_PROFILE = "SCRUBPROFILE"
-    SCRUB_ACTIVITY = "SCRUBACTIVITY"
-    SCRUB_NEGDB = "SCRUBNEGDB"
-    BANK_CATEGORY = "BANKCATEGORY"
-    BANK_NO_MEMBERSHIP = "BANKNOMEMBERSHIP"
-    CARD_HASH = "CARDHASH"
-    USERNAME = "USERNAME"
-    CUSTOMER_PASSWORD = "CUSTOMERPASSWORD"
-    AFFILIATE = "AFFILIATE"
-    MERCHANT_DESCRIPTOR = "MERCHANTDESCRIPTOR"
-    MERCHANT_DESCRIPTOR_TRIAL = "MERCHANTDESCRIPTORTRIAL"
-    MERCHANT_DESCRIPTOR_SET = "MERCHANTDESCRIPTORSET"
-    MERCHANT_DESCRIPTOR_TRIAL_SET = "MERCHANTDESCRIPTORTRIALSET"
-    MERCHANT_DESCRIPTOR_CITY = "MERCHANTDESCRIPTORCITY"
-    MERCHANT_SITE_ID = "MERCHANTSITEID"
     BILLING_TYPE = "BILLINGTYPE"
-    MERCHANT_PRODUCT_ID = "MERCHANTPRODUCTID"
-    REBILL_FREQUENCY = "REBILLFREQUENCY"
-    REBILL_AMOUNT = "REBILLAMOUNT"
-    REBILL_START = "REBILLSTART"
-    REBILL_END_DATE = "REBILLENDDATE"
-    REBILL_COUNT = "REBILLCOUNT"
-    REBILL_TRANS_NUMBER = "REBILLTRANSNUMBER"
-    REBILL_SUSPEND = "REBILLSUSPEND"
-    REBILL_RESUME = "REBILLRESUME"
-    REBILL_REACTIVATE = "REBILLREACTIVATE"
-    REBILL_FEE = "REBILLFEE"
-    EXISTING_CREDITS = "EXISTINGCREDITS"
-    CUSTOMER_PHONE_NO = "CUSTOMERPHONENO"
-    PARTIAL_AUTH_FLAG = "PARTIALAUTHFLAG"
-    SUBMIT_ZERO_DOLLAR_AS_ONE_DOLLAR = "SUBMITZERODOLLARASONEDOLLAR"
-    IOVATION_BLACK_BOX = "IOVATIONBLACKBOX"
-    IOVATION_TRACKING_NO = "IOVATIONTRACKINGNO"
-    IOVATION_DEVICE = "IOVATIONDEVICE"
-    IOVATION_RESULTS = "IOVATIONRESULTS"
-    IOVATION_RULE = "IOVATIONRULE"
-    IOVATION_SCORE = "IOVATIONSCORE"
-    IOVATION_RULE_COUNT = "IOVATIONRULECOUNT"
-    IOVATION_RULE_TYPE_ = "IOVATIONRULETYPE_"
-    IOVATION_RULE_REASON_ = "IOVATIONRULEREASON_"
-    IOVATION_RULE_SCORE_ = "IOVATIONRULESCORE_"
-    THREATMETRIX_SESSION_ID = "THREATMETRIXSESSIONID"
-    REFERRER_URL = "REFERRERURL"
-    GENERATE_POSTBACK = "GENERATEPOSTBACK"
-    CLONE_CUSTOMER_RECORD = "CLONECUSTOMERRECORD"
-    CLONE_TO_CUSTOMER_ID = "CLONETOCUSTOMERID"
-    REFERRAL_NO = "REFERRALNO"
-    REFERRING_MERCHANT_ID = "REFERRINGMERCHANTID"
-    REFERRED_CUSTOMER_ID = "REFERREDCUSTOMERID"
-    REFERRER_SUBMIT_FLAG = "REFERRERSUBMITFLAG"
-    REFERRER_ALLOW_OVERRIDE_FLAG = "REFERRERALLOWOVERRIDEFLAG"
-    REFERRER_PASSWORD = "REFERRERPASSWORD"
-    CASCADE_RETRY_TYPE = "CASCADERETRYTYPE"
-    CASCADE_ACCOUNT_LIST = "CASCADEACCOUNTLIST"
-    CASCADE_TRIED_LIST = "CASCADETRIEDLIST"
-    CASCADE_ERROR_CODES = "CASCADEERRORCODES"
-    CASCADE_BANK_CODES = "CASCADEBANKCODES"
-    RETRY_OMIT_CASCADE_ACCOUNTS = "RETRYOMITACCOUNTS"
-    MAX_CASCADE_ATTEMPTS = "MAXCASCADEATTEMPTS"
-    CASCADE_DISABLED = "CASCADEDISABLED"
-    CASCADE_LAST_PROCESSOR = "CASCADELASTPROCESSOR"
-    SUBMISSION_NUMBER = "SUBMISSIONNUMBER"
-    PREFERRED_MERCHANT_ACCOUNT = "PREFERREDMERCHANTACCOUNT"
-    CUSTOMER_CREATED_DATE = "customerCreatedDate"
-    CUSTOMER_VELOCITY = "customerVelocity"
-    CUSTOMER_VELOCITY_CURRENCY = "customerVelocityCurrency"
-    XSELL_FLAG = "XSELLFLAG"
-    XSELL_ORIGINAL_MERCHANT_CUSTOMER_ID = "XSELLORIGINALMERCHANTCUSTOMERID"
-    XSELL_ORIGINAL_MERCHANT_ID = "XSELLORIGINALMERCHANTID"
-    REBILL_FLAG = "REBILLFLAG"
-    ORIGINAL_EXPIRE_MONTH = "originalExpireMonth"
-    ORIGINAL_EXPIRE_YEAR = "originalExpireYear"
-    EXPIRATION_RETRIES = "expirationRetries"
-    DO_NOT_SEND_VOIDS = "doNotSendVoids"
-    CVV_OVERRIDES_FOREIGN_AVS = "CVVOverridesForeignAVS"
-    ACCT_COMPROMISED_SCRUB = "ACCTCOMPROMISEDSCRUB"
-    PAYINFO_TRANSACT_ID= "PAYINFOTRANSACTID"
+    BILLING_ZIPCODE = "BILLINGZIPCODE"
     BIN_ACCOUNT_EXCLUSIONS = "BINAccountExclusions"
-    BIN_ROUTING_LIST = "BINRoutingList"
     BIN_ROUTING_INDEX = "BINRoutingIndex"
-    CAPTURE_DAYS = "CAPTUREDAYS"
-    FAILED_SERVER = "FAILEDSERVER"
-    FAILED_GUID = "FAILEDGUID"
-    FAILED_RESPONSE_CODE = "FAILEDRESPONSECODE"
-    FAILED_REASON_CODE = "FAILEDREASONCODE"
-    SITE_NO = "SITENO"
-    BATCH_DURATION = "BATCHDURATION"
-    BATCH_RECLOSE_GUID = "BATCHRECLOSEGUID"
-    BATCH_UPLOAD = "BATCHUPLOAD"
-    BATCH_TIME_OFFSET = "BATCHTIMEOFFSET"
-    TEST_SITE = "TESTSITE"
-    PARES = "PARES"
-    USE_3D_SECURE = "USE3DSECURE"
-    OMIT_RECEIPT = "OMITRECEIPT"
-    OPERATION_TYPE = "OPERATION"
-    FILENAME = "FILENAME"
-    _3D_CHECK = "THREEDCHECK"
-    _3D_ECI = "THREEDECI"
-    _3D_CAVV_UCAF = "THREEDCAVVUCAF"
-    _3D_XID = "THREEDXID"
-    _3D_SIGNATURE = "THREEDSIGNATURE"
-    _3D_PARESSTATUS = "THREEDPARESSTATUS"
-    _3D_VERSTATUS = "THREEDVERSTATUS"
-    _3D_CAVV_ALGORITHM = "THREEDCAVVALGORITHM"
-    BROWSER_USER_AGENT = "BROWSERUSERAGENT"
+    BIN_ROUTING_LIST = "BINRoutingList"
     BROWSER_ACCEPT_HEADER = "BROWSERACCEPTHEADER"
+    BROWSER_COLOR_DEPTH = "BROWSERCOLORDEPTH"
     BROWSER_JAVA_ENABLED = "BROWSERJAVAENABLED"
     BROWSER_LANGUAGE = "BROWSERLANGUAGE"
-    BROWSER_COLOR_DEPTH = "BROWSERCOLORDEPTH"
     BROWSER_SCREEN_HEIGHT = "BROWSERSCREENHEIGHT"
     BROWSER_SCREEN_WIDTH = "BROWSERSCREENWIDTH"
     BROWSER_TIME_ZONE = "BROWSERTIMEZONE"
-    IS_3DSECURE_BYPASS = "is3DSecureBypass"
+    BROWSER_USER_AGENT = "BROWSERUSERAGENT"
+    CAPTURE_DAYS = "CAPTUREDAYS"
+    CARDINAL_API_IDENTIFIER = "CARDINAL_API_IDENTIFIER"
+    CARDINAL_API_KEY = "CARDINAL_API_KEY"
+    CARDINAL_ORG_UNIT_ID = "CARDINAL_ORG_UNIT_ID"
+    CARDINAL_SUB_PID = "CARDINAL_SUB_PID"
+    CARDNO = "CARDNO"
+    CARD_HASH = "CARDHASH"
+    CASCADE_ACCOUNT_LIST = "CASCADEACCOUNTLIST"
+    CASCADE_BANK_CODES = "CASCADEBANKCODES"
+    CASCADE_DISABLED = "CASCADEDISABLED"
+    CASCADE_ERROR_CODES = "CASCADEERRORCODES"
+    CASCADE_LAST_PROCESSOR = "CASCADELASTPROCESSOR"
+    CASCADE_RETRY_TYPE = "CASCADERETRYTYPE"
+    CASCADE_TRIED_LIST = "CASCADETRIEDLIST"
+    CLONE_CUSTOMER_RECORD = "CLONECUSTOMERRECORD"
+    CLONE_TO_CUSTOMER_ID = "CLONETOCUSTOMERID"
+    COF_FRAMEWORK = "COFFRAMEWORK"
+    CURRENCY = "CURRENCY"
+    CUSTOMER_CREATED_DATE = "customerCreatedDate"
+    CUSTOMER_FIRSTNAME = "CUSTOMERFIRSTNAME"
+    CUSTOMER_LASTNAME = "CUSTOMERLASTNAME"
+    CUSTOMER_PASSWORD = "CUSTOMERPASSWORD"
+    CUSTOMER_PHONE_NO = "CUSTOMERPHONENO"
+    CUSTOMER_VELOCITY = "customerVelocity"
+    CUSTOMER_VELOCITY_CURRENCY = "customerVelocityCurrency"
+    CVV2 = "CVV2"
+    CVV2_CHECK = "CVV2CHECK"
+    CVV_OVERRIDES_FOREIGN_AVS = "CVVOverridesForeignAVS"
+    DO_NOT_SEND_INCOMPLETE_3DS_AUTHENTICATION = "DO_NOT_SEND_INCOMPLETE_3DS_AUTH"
+    DO_NOT_SEND_VOIDS = "doNotSendVoids"
+    EMAIL = "EMAIL"
+    EMBEDDED_FIELDS_TOKEN = "embeddedFieldsToken"
+    ENABLE_3DS_PREPAID = "enable3DSPrepaid"
+    EXISTING_CREDITS = "EXISTINGCREDITS"
+    EXPIRATION_RETRIES = "expirationRetries"
+    EXPIRE_MONTH = "EXPIREMONTH"
+    EXPIRE_YEAR = "EXPIREYEAR"
+    FAILED_GUID = "FAILEDGUID"
+    FAILED_REASON_CODE = "FAILEDREASONCODE"
+    FAILED_RESPONSE_CODE = "FAILEDRESPONSECODE"
+    FAILED_SERVER = "FAILEDSERVER"
+    FAILURE_URL = "FAILUREURL"
+    FILENAME = "FILENAME"
+    FORCED_CARD_TYPE = "FORCED_CARD_TYPE"
+    GATEWAY_CONNECT_TIMEOUT = "gatewayConnectTimeout"
+    GATEWAY_PORTNO = "gatewayPortNo"
+    GATEWAY_READ_TIMEOUT = "gatewayReadTimeout"
+    GATEWAY_SERVER = "gatewayServer"
+    GATEWAY_SERVLET = "gatewayServlet"
+    GATEWAY_URL = "gatewayURL"
+    GENERATE_POSTBACK = "GENERATEPOSTBACK"
+    GOOGLE_PAY_TOKEN = "GOOGLEPAYTOKEN"
+    IOVATION_BLACK_BOX = "IOVATIONBLACKBOX"
+    IOVATION_DEVICE = "IOVATIONDEVICE"
+    IOVATION_RESULTS = "IOVATIONRESULTS"
+    IOVATION_RULE = "IOVATIONRULE"
+    IOVATION_RULE_COUNT = "IOVATIONRULECOUNT"
+    IOVATION_RULE_REASON_ = "IOVATIONRULEREASON_"
+    IOVATION_RULE_SCORE_ = "IOVATIONRULESCORE_"
+    IOVATION_RULE_TYPE_ = "IOVATIONRULETYPE_"
+    IOVATION_SCORE = "IOVATIONSCORE"
+    IOVATION_TRACKING_NO = "IOVATIONTRACKINGNO"
+    IP2LOCATION_COUNTRY = "IP2LOCATIONCOUNTRY"
+    IP2LOCATION_USAGE_TYPE = "IP2LOCATIONUSAGETYPE"
+    IPADDRESS = "IPADDRESS"
     IS_3DSECURE_AUTHREQ = "is3DSecureAuthReq"
+    IS_3DSECURE_BYPASS = "is3DSecureBypass"
+    IS_3DSECURE_FRICTIONLESS = "IS_3DSECURE_FRICTIONLESS"
+    IS_3DSECURE_INELIGIBLE = "is3DSecureIneligible"
     IS_3DSECURE_NOT_ENROLLED = "is3DSecureNotEnrolled"
+    IS_3DS_LOOKUP_RETRY = "is3DSLookupRetry"
+    LANGUAGE = "LANGUAGE"
+    MAX_CASCADE_ATTEMPTS = "MAXCASCADEATTEMPTS"
+    MERCHANT_ACCOUNT = "MERCHANTACCOUNT"
+    MERCHANT_ACCOUNT_INDEX = "MERCHANTACCOUNTINDEX"
+    MERCHANT_CASCADED_AUTH = "MERCHANTCASCADEDAUTH"
+    MERCHANT_CUSTOMER_ID = "MERCHANTCUSTOMERID"
+    MERCHANT_DESCRIPTOR = "MERCHANTDESCRIPTOR"
+    MERCHANT_DESCRIPTOR_CITY = "MERCHANTDESCRIPTORCITY"
+    MERCHANT_DESCRIPTOR_SET = "MERCHANTDESCRIPTORSET"
+    MERCHANT_DESCRIPTOR_TRIAL = "MERCHANTDESCRIPTORTRIAL"
+    MERCHANT_DESCRIPTOR_TRIAL_SET = "MERCHANTDESCRIPTORTRIALSET"
+    MERCHANT_ID = "MERCHANTID"
+    MERCHANT_INVOICE_ID = "MERCHANTINVOICEID"
+    MERCHANT_PASSWORD = "MERCHANTPASSWORD"
+    MERCHANT_PRODUCT_ID = "MERCHANTPRODUCTID"
+    MERCHANT_SITE_ID = "MERCHANTSITEID"
+    NETWORK_CRYPTOGRAM = "NETWORKCRYPTOGRAM"
+    NETWORK_CRYPTOGRAM_ECI = "NETWORKCRYPTOGRAMECI"
+    NETWORK_MERCHANT_ENTITY_ID = "networkMerchantEntityID"
+    NETWORK_TOKEN = "NETWORKTOKEN"
+    NETWORK_TOKENIZATION_DISABELD = "NETWORKTOKENIZATIONDISABELD"
+    NETWORK_TOKEN_EXPIRY_MONTH = "NETWORKTOKENEXPIRYMONTH"
+    NETWORK_TOKEN_EXPIRY_YEAR = "NETWORKTOKENEXPIRYYEAR"
+    NETWORK_TOKEN_EXTERNAL_ID = "networkTokenExternalID"
+    NETWORK_TOKEN_GUID = "networkTokenGuid"
+    NETWORK_TOKEN_REQUESTOR_ID = "NETWORKTOKENREQUESTORID"
+    NON_RELOADABLE_PREPAID_CARD = "NON_RELOADABLE_PREPAID_CARD"
+    OMIT_RECEIPT = "OMITRECEIPT"
+    ONCLICK_LOGO_URL = "onClickLogoURL"
+    ONE_DOLLAR_FALLBACK_FOR_ZERO_DOLLAR_AUTH = "ONE_DOLLAR_FALLBACK_FOR_ZERO_DOLLAR_AUTH"
+    OPERATION_TYPE = "OPERATION"
+    ORIGINAL_EXPIRE_MONTH = "originalExpireMonth"
+    ORIGINAL_EXPIRE_YEAR = "originalExpireYear"
+    PARES = "PARES"
+    PARTIAL_AUTH_FLAG = "PARTIALAUTHFLAG"
+    PAYINFO_TRANSACT_ID= "PAYINFOTRANSACTID"
+    PAYMENT_LINK_TOKEN = "PAYMENTLINKTOKEN"
+    PAY_HASH = "cardHash"
+    POSTING_IPADDRESS = "POSTINGIPADDRESS"
+    PREFERRED_MERCHANT_ACCOUNT = "PREFERREDMERCHANTACCOUNT"
+    PROCESSOR_3DS = "PROCESSOR3DS"
+    REBILL_AMOUNT = "REBILLAMOUNT"
+    REBILL_AMOUNT_ON_3DS_LOOKUP = "REBILLAMOUNTON3DSLOOKUP"
+    REBILL_COUNT = "REBILLCOUNT"
+    REBILL_END_DATE = "REBILLENDDATE"
+    REBILL_FEE = "REBILLFEE"
+    REBILL_FLAG = "REBILLFLAG"
+    REBILL_FREQUENCY = "REBILLFREQUENCY"
+    REBILL_REACTIVATE = "REBILLREACTIVATE"
+    REBILL_RESUME = "REBILLRESUME"
+    REBILL_START = "REBILLSTART"
+    REBILL_SUSPEND = "REBILLSUSPEND"
+    REBILL_TRANS_NUMBER = "REBILLTRANSNUMBER"
+    REFERENCE_GUID = "REFERENCEGUID"
+    REFERENCE_SCHEME_SETTLEMENT_DATE = "SCHEMESETTLEDATE"
+    REFERENCE_SCHEME_TRANSACTION_ID = "SCHEMETRANID"
+    REFERRAL_NO = "REFERRALNO"
+    REFERRED_CUSTOMER_ID = "REFERREDCUSTOMERID"
+    REFERRER_ALLOW_OVERRIDE_FLAG = "REFERRERALLOWOVERRIDEFLAG"
+    REFERRER_PASSWORD = "REFERRERPASSWORD"
+    REFERRER_SUBMIT_FLAG = "REFERRERSUBMITFLAG"
+    REFERRER_URL = "REFERRERURL"
+    REFERRING_MERCHANT_ID = "REFERRINGMERCHANTID"
     RETRY_3DSECURE_DECLINES = "retry3DSecureDeclines"
     RETRY_3DSECURE_FAILED_AUTHENTICATION = "retry3DSecureFailedAuthentication"
-    ENABLE_3DS_PREPAID = "enable3DSPrepaid"
-    IS_3DSECURE_INELIGIBLE = "is3DSecureIneligible"
-    XSELL_MERCHANT_ID = "XSELLMERCHANTID"
+    RETRY_OMIT_CASCADE_ACCOUNTS = "RETRYOMITACCOUNTS"
+    ROUTING_NO = "routingNo"
+    SAVINGS_ACCOUNT = "savingsAccount"
+    SCRUB = "SCRUB"
+    SCRUB_ACTIVITY = "SCRUBACTIVITY"
+    SCRUB_NEGDB = "SCRUBNEGDB"
+    SCRUB_PROFILE = "SCRUBPROFILE"
+    SEND_MC_AUTH_INDICATOR = "SEND_MC_AUTH_INDICATOR"
+    SHOW_PAYMENT_FORM = "SHOW_PAYMENT_FORM"
+    SITE_NO = "SITENO"
+    SS_NUMBER = "SSNUMBER"
+    STYLE_SHEET = "style"
+    STYLE_SHEET2 = "style2"
+    STYLE_SHEET3 = "style3"
+    SUBMISSION_NUMBER = "SUBMISSIONNUMBER"
+    SUBMIT_ZERO_DOLLAR_AS_ONE_DOLLAR = "SUBMITZERODOLLARASONEDOLLAR"
+    SUCCESS_URL = "SUCCESSURL"
+    TEST_SITE = "TESTSITE"
+    THREATMETRIX_SESSION_ID = "THREATMETRIXSESSIONID"
+    TRANSACTION_TYPE = "TRANSACTIONTYPE"
+    TRANSACT_ID = "referenceGUID"
+    TRANSLATIONS = "translations"
+    UDF01 = "UDF01"
+    UDF02 = "UDF02"
+    USERNAME = "USERNAME"
+    USE_3D_SECURE = "USE3DSECURE"
+    USE_PRIMARY_SCHEMEID = "USEPRIMARYSCHEMEID"
+    VERSION_INDICATOR = "version"
+    VERSION_NUMBER = "PY3.6"
+    XSELL_CUSTOMER_ID = "XSELLCUSTOMERID"
+    XSELL_FLAG = "XSELLFLAG"
     XSELL_MERCHANT_ACCOUNT = "XSELLMERCHANTACCOUNT"
     XSELL_MERCHANT_ACCOUNT_INDEX = "XSELLMERCHANTACCOUNTINDEX"
-    XSELL_CUSTOMER_ID = "XSELLCUSTOMERID"
+    XSELL_MERCHANT_ID = "XSELLMERCHANTID"
+    XSELL_ORIGINAL_MERCHANT_CUSTOMER_ID = "XSELLORIGINALMERCHANTCUSTOMERID"
+    XSELL_ORIGINAL_MERCHANT_ID = "XSELLORIGINALMERCHANTID"
     XSELL_REFERENCE_XACT = "XSELLREFERENCEXACT"
-    REBILL_AMOUNT_ON_3DS_LOOKUP = "REBILLAMOUNTON3DSLOOKUP"
-    REFERENCE_SCHEME_TRANSACTION_ID = "SCHEMETRANID"
-    REFERENCE_SCHEME_SETTLEMENT_DATE = "SCHEMESETTLEDATE"
-    _3DSECURE_DF_REFERENCE_ID = "_3DSECURE_DF_REFERENCE_ID"
-    _3DSECURE_REDIRECT_URL = "_3DSECURE_REDIRECT_URL"
-    _3DSECURE_LOOKUP_SIGNATURE = "_3DSECURE_LOOKUP_SIGNATURE"
-    _3DSECURE_DS_TRANSACTION_ID = "_3DSECURE_DS_TRANSACTION_ID"
     _3DSECURE_ACS_TRANSACTION_ID = "_3DSECURE_ACS_TRANSACTION_ID"
-    _3DSECURE_CHALLENGE_MANDATED_INDICATOR = "_3DSECURE_CHALLENGE_MANDATED_INDICATOR"
-    _3DSECURE_THREE_DS_SERVER_TRANSACTION_ID = "_3DSECURE_THREE_DS_SERVER_TRANSACTION_ID"
-    IS_3DSECURE_FRICTIONLESS = "IS_3DSECURE_FRICTIONLESS"
-    CARDINAL_API_KEY = "CARDINAL_API_KEY"
-    CARDINAL_API_IDENTIFIER = "CARDINAL_API_IDENTIFIER"
-    CARDINAL_SUB_PID = "CARDINAL_SUB_PID"
-    CARDINAL_ORG_UNIT_ID = "CARDINAL_ORG_UNIT_ID"
-    _3DSECURE_LOOKUP_CHALLENGE_INDICATOR = "_3DSECURE_LOOKUP_CHALLENGE_INDICATOR"
-
     _3DSECURE_ACS_WINDOW_SIZE = "_3DSECURE_ACS_WINDOW_SIZE"
     """
     An override field that a merchant can pass in to set the challenge window size to display to the end cardholder.
@@ -241,47 +262,22 @@ class GatewayRequest:
     - 04 (600x400)
     - 05 (Full page)
     """
-
-    PROCESSOR_3DS = "PROCESSOR3DS"
-    DO_NOT_SEND_INCOMPLETE_3DS_AUTHENTICATION = "DO_NOT_SEND_INCOMPLETE_3DS_AUTH"
-    MERCHANT_CASCADED_AUTH = "MERCHANTCASCADEDAUTH"
-    FORCED_CARD_TYPE = "FORCED_CARD_TYPE"
-    GOOGLE_PAY_TOKEN = "GOOGLEPAYTOKEN"
-    NETWORK_TOKEN = "NETWORKTOKEN"
-    NETWORK_TOKEN_EXPIRY_MONTH = "NETWORKTOKENEXPIRYMONTH"
-    NETWORK_TOKEN_EXPIRY_YEAR = "NETWORKTOKENEXPIRYYEAR"
-    NETWORK_CRYPTOGRAM = "NETWORKCRYPTOGRAM"
-    NETWORK_CRYPTOGRAM_ECI = "NETWORKCRYPTOGRAMECI"
-    NETWORK_TOKEN_REQUESTOR_ID = "NETWORKTOKENREQUESTORID"
-    NETWORK_TOKENIZATION_DISABELD = "NETWORKTOKENIZATIONDISABELD"
-    NETWORK_TOKEN_GUID = "networkTokenGuid"
-    NETWORK_TOKEN_EXTERNAL_ID = "networkTokenExternalID"
-    NETWORK_MERCHANT_ENTITY_ID = "networkMerchantEntityID"
-    ALLOW_CARD_DEBIT_CREDIT = "ALLOW_CARD_DEBIT_CREDIT"
+    _3DSECURE_CHALLENGE_MANDATED_INDICATOR = "_3DSECURE_CHALLENGE_MANDATED_INDICATOR"
+    _3DSECURE_DF_REFERENCE_ID = "_3DSECURE_DF_REFERENCE_ID"
+    _3DSECURE_DS_TRANSACTION_ID = "_3DSECURE_DS_TRANSACTION_ID"
+    _3DSECURE_LOOKUP_CHALLENGE_INDICATOR = "_3DSECURE_LOOKUP_CHALLENGE_INDICATOR"
+    _3DSECURE_LOOKUP_SIGNATURE = "_3DSECURE_LOOKUP_SIGNATURE"
+    _3DSECURE_REDIRECT_URL = "_3DSECURE_REDIRECT_URL"
+    _3DSECURE_THREE_DS_SERVER_TRANSACTION_ID = "_3DSECURE_THREE_DS_SERVER_TRANSACTION_ID"
+    _3D_CAVV_ALGORITHM = "THREEDCAVVALGORITHM"
+    _3D_CAVV_UCAF = "THREEDCAVVUCAF"
+    _3D_CHECK = "THREEDCHECK"
+    _3D_ECI = "THREEDECI"
+    _3D_PARESSTATUS = "THREEDPARESSTATUS"
+    _3D_SIGNATURE = "THREEDSIGNATURE"
     _3D_VERSION = "THREEDVERSION"
-    BANK_CARD_DEBIT_CREDIT = "BANK_CARD_DEBIT_CREDIT"
-    SEND_MC_AUTH_INDICATOR = "SEND_MC_AUTH_INDICATOR"
-    ONE_DOLLAR_FALLBACK_FOR_ZERO_DOLLAR_AUTH = "ONE_DOLLAR_FALLBACK_FOR_ZERO_DOLLAR_AUTH"
-    NON_RELOADABLE_PREPAID_CARD = "NON_RELOADABLE_PREPAID_CARD"
-    IS_3DS_LOOKUP_RETRY = "is3DSLookupRetry"
-    USE_PRIMARY_SCHEMEID = "USEPRIMARYSCHEMEID"
-    ACCOUNT_HOLDER = "accountHolder"
-    ACCOUNT_NO = "accountNo"
-    EMBEDDED_FIELDS_TOKEN = "embeddedFieldsToken"
-    PAY_HASH = "cardHash"
-    ROUTING_NO = "routingNo"
-    SAVINGS_ACCOUNT = "savingsAccount"
-    TRANSACT_ID = "referenceGUID"
-    FAILURE_URL = "FAILUREURL"
-    SUCCESS_URL = "SUCCESSURL"
-    STYLE_SHEET = "style"
-    STYLE_SHEET2 = "style2"
-    STYLE_SHEET3 = "style3"
-    TRANSLATIONS = "translations"
-    SHOW_PAYMENT_FORM = "SHOW_PAYMENT_FORM"
-    LANGUAGE = "LANGUAGE"
-    ONCLICK_LOGO_URL = "onClickLogoURL"
-    PAYMENT_LINK_TOKEN = "PAYMENTLINKTOKEN"
+    _3D_VERSTATUS = "THREEDVERSTATUS"
+    _3D_XID = "THREEDXID"
 
     """
     init__() - Constructor for class.
@@ -362,120 +358,117 @@ class GatewayResponse(xml.sax.handler.ContentHandler):
     #	Define constant hash values.
     #
     ######################################################################
-    #
-    VERSION_NO = "1.0"
 
-    VERSION_INDICATOR = "version"
-    DOCUMENT_BASE = "gatewayResponse"
-    AUTH_NO = "authNo"
-    AVS_RESPONSE = "avsResponse"
-    CVV2_CODE = "cvv2Code"
-    EXCEPTION = "exception"
-    MERCHANT_ACCOUNT = "merchantAccount"
-    REASON_CODE = "reasonCode"
-    RESPONSE_CODE = "responseCode"
-    REFERENCE_NO = "referenceNo"
-    RETURNED_ACI = "returnedACI"
-    TRANSACTION_TIME = "transactionTime"
-    BANK_RESPONSE_CODE = "bankResponseCode"
-    MERCHANT_ADVICE_CODE = "merchantAdviceCode"
-    WIRECARD_3D_DATA = "INTERNAL0902091104"
-    SCRUB_RESULTS = "scrubResults"
+    ACS_URL = "acsURL"
     APPROVED_AMOUNT = "approvedAmount"
     APPROVED_CURRENCY = "approvedCurrency"
-    CARD_TYPE = "cardType"
-    CARD_EXPIRATION = "cardExpiration"
-    CARD_COUNTRY = "cardCountry"
-    CARD_ISSUER_NAME = "cardIssuerName"
-    CARD_ISSUER_PHONE = "cardIssuerPhone"
-    CARD_ISSUER_URL = "cardIssuerURL"
-    CARD_REGION = "cardRegion"
-    CARD_DESCRIPTION = "cardDescription"
-    CARD_DEBIT_CREDIT = "cardDebitCredit"
-    PAY_TYPE = "payType"
-    PAY_TYPE_CREDIT = "CREDIT"
-    PAY_TYPE_DEBIT = "DEBIT"
-    MERCHANT_CUSTOMER_ID = "merchantCustomerID"
-    MERCHANT_INVOICE_ID = "merchantInvoiceID"
-    ACS_URL = "acsURL"
-    PAREQ = "PAREQ"
-    CAVV_RESPONSE = "cavvResponse"
-    ECI = "ECI"
-    CACHED_3DSECURE_SCRUB = "cached3DSecureScrub"
-    REBILL_END_DATE = "rebillEndDate"
-    REBILL_DATE = "rebillDate"
-    REBILL_AMOUNT = "rebillAmount"
-    REBILL_CURRENCY = "rebillCurrency"
-    REBILL_FREQUENCY = "rebillFrequency"
-    LAST_BILLING_DATE = "lastBillingDate"
-    LAST_BILLING_AMOUNT = "lastBillingAmount"
-    JOIN_DATE = "joinDate"
-    JOIN_AMOUNT = "joinAmount"
-    REBILL_STATUS = "rebillStatus"
-    LAST_REASON_CODE = "lastReasonCode"
-    MERCHANT_SITE_ID = "merchantSiteID"
-    MERCHANT_PRODUCT_ID = "merchantProductID"
-    SCHEME_TRANSACTION_ID = "schemeTransactionID"
-    SCHEME_SETTLEMENT_DATE = "schemeSettlementDate"
+    AUTH_NO = "authNo"
+    AVS_RESPONSE = "avsResponse"
     BALANCE_AMOUNT = "balanceAmount"
     BALANCE_CURRENCY = "balanceCurrency"
-    IOVATION_BLACK_BOX = "IOVATIONBLACKBOX"
-    IOVATION_TRACKING_NO = "IOVATIONTRACKINGNO"
-    IOVATION_DEVICE = "IOVATIONDEVICE"
-    IOVATION_RESULTS = "IOVATIONRESULTS"
-    IOVATION_ECHO= "IOVATIONECHO"
-    IOVATION_SCORE = "IOVATIONSCORE"
-    IOVATION_RULE_COUNT = "IOVATIONRULECOUNT"
-    IOVATION_RULE_TYPE_ = "IOVATIONRULETYPE_"
-    IOVATION_RULE_REASON_ = "IOVATIONRULEREASON_"
-    IOVATION_RULE_SCORE_ = "IOVATIONRULESCORE_"
-    IOVATION_SURE_SCORE = "IOVATIONSURESCORE"
-    OPERATION = "operation"
-    DATA = "data"
-    IS_BANK_HARD_DECLINE = "isBankHardDecline"
+    BANK_RESPONSE_CODE = "bankResponseCode"
+    BATCH_CREDIT_COUNT = "batchCreditCount"
+    BATCH_CREDIT_TOTAL = "batchCreditTotal"
     BATCH_NUMBER = "batchNumber"
     BATCH_SALES_COUNT = "batchSalesCount"
     BATCH_SALES_TOTAL = "batchSalesTotal"
-    BATCH_CREDIT_COUNT = "batchCreditCount"
-    BATCH_CREDIT_TOTAL = "batchCreditTotal"
-    _3DSECURE_DEVICE_COLLECTION_JWT = "_3DSECURE_DEVICE_COLLECTION_JWT"
-    _3DSECURE_DEVICE_COLLECTION_URL = "_3DSECURE_DEVICE_COLLECTION_URL"
-    _3DSECURE_VERSION = "_3DSECURE_VERSION"
-    _3DSECURE_STEP_UP_URL = "_3DSECURE_STEP_UP_URL"
-    _3DSECURE_STEP_UP_JWT = "_3DSECURE_STEP_UP_JWT"
-    PROCESSOR_3DS = "PROCESSOR3DS"
-    _3DSECURE_CHALLENGE_INDICATOR = "_3DSECURE_CHALLENGE_INDICATOR"
-    _3DSECURE_DS_TRANSACTION_ID = "_3DSECURE_DS_TRANSACTION_ID"
-    _3DSECURE_PARESSTATUS = "_3DSECURE_PARESSTATUS"
-    _3DSECURE_CAVV_UCAF = "_3DSECURE_CAVV_UCAF"
-    _3DSECURE_CAVV_ALGORITHM = "_3DSECURE_CAVV_ALGORITHM"
-    _3DSECURE_LOOKUP_SIGNATURE = "_3DSECURE_LOOKUP_SIGNATURE"
-    _3DSECURE_XID = "_3DSECURE_XID"
-    _3DSECURE_ACS_TRANSACTION_ID = "_3DSECURE_ACS_TRANSACTION_ID"
-    _3DSECURE_THREE_DS_SERVER_TRANSACTION_ID = "_3DSECURE_THREE_DS_SERVER_TRANSACTION_ID"
-    _3DSECURE_LOOKUP_CHALLENGE_INDICATOR = "_3DSECURE_LOOKUP_CHALLENGE_INDICATOR"
-    _3DSECURE_CHALLENGE_MANDATED_INDICATOR = "_3DSECURE_CHALLENGE_MANDATED_INDICATOR"
-    _3DSECURE_VERSTATUS = "_3DSECURE_VERSTATUS"
-    _3DSECURE_LOOKUP_REFERENCE_GUID = "_3D_LOOKUP_REFERENCE_GUID"
-    PARES = "PARES"
     BILLING_ADDRESS = "billingAddress"
     BILLING_CITY = "billingCity"
     BILLING_COUNTRY = "billingCountry"
     BILLING_STATE = "billingState"
     BILLING_ZIPCODE = "billingZipCode"
-    CARD_BIN = "cardBin"
+    CACHED_3DSECURE_SCRUB = "cached3DSecureScrub"
     CARDHOLDER_REASON_CODE_DESCRIPTION = "cardholderReasonCodeDescription"
+    CARD_BIN = "cardBin"
+    CARD_COUNTRY = "cardCountry"
+    CARD_DEBIT_CREDIT = "cardDebitCredit"
+    CARD_DESCRIPTION = "cardDescription"
+    CARD_EXPIRATION = "cardExpiration"
+    CARD_HASH = "cardHash"
+    CARD_ISSUER_NAME = "cardIssuerName"
+    CARD_ISSUER_PHONE = "cardIssuerPhone"
+    CARD_ISSUER_URL = "cardIssuerURL"
+    CARD_REGION = "cardRegion"
+    CARD_TYPE = "cardType"
+    CAVV_RESPONSE = "cavvResponse"
     CUSTOMER_FIRSTNAME = "customerFirstName"
     CUSTOMER_LASTNAME = "customerLastName"
+    CVV2_CODE = "cvv2Code"
+    DATA = "data"
+    ECI = "ECI"
     EMAIL = "email"
-    CARD_HASH = "cardHash"
-    PAY_LAST_FOUR = "cardLastFour"
+    EXCEPTION = "exception"
+    IOVATION_BLACK_BOX = "IOVATIONBLACKBOX"
+    IOVATION_DEVICE = "IOVATIONDEVICE"
+    IOVATION_ECHO= "IOVATIONECHO"
+    IOVATION_RESULTS = "IOVATIONRESULTS"
+    IOVATION_RULE_COUNT = "IOVATIONRULECOUNT"
+    IOVATION_RULE_REASON_ = "IOVATIONRULEREASON_"
+    IOVATION_RULE_SCORE_ = "IOVATIONRULESCORE_"
+    IOVATION_RULE_TYPE_ = "IOVATIONRULETYPE_"
+    IOVATION_SCORE = "IOVATIONSCORE"
+    IOVATION_SURE_SCORE = "IOVATIONSURESCORE"
+    IOVATION_TRACKING_NO = "IOVATIONTRACKINGNO"
+    IS_BANK_HARD_DECLINE = "isBankHardDecline"
+    JOIN_AMOUNT = "joinAmount"
+    JOIN_DATE = "joinDate"
+    LAST_BILLING_AMOUNT = "lastBillingAmount"
+    LAST_BILLING_DATE = "lastBillingDate"
+    LAST_REASON_CODE = "lastReasonCode"
+    MERCHANT_ACCOUNT = "merchantAccount"
+    MERCHANT_ADVICE_CODE = "merchantAdviceCode"
+    MERCHANT_CUSTOMER_ID = "merchantCustomerID"
+    MERCHANT_INVOICE_ID = "merchantInvoiceID"
+    MERCHANT_PRODUCT_ID = "merchantProductID"
+    MERCHANT_SITE_ID = "merchantSiteID"
+    OPERATION = "operation"
+    PAREQ = "PAREQ"
+    PARES = "PARES"
     PAYMENT_LINK_URL = "PAYMENT_LINK_URL"
+    PAY_LAST_FOUR = "cardLastFour"
+    PAY_TYPE = "payType"
+    PAY_TYPE_CREDIT = "CREDIT"
+    PAY_TYPE_DEBIT = "DEBIT"
+    PROCESSOR_3DS = "PROCESSOR3DS"
+    REASON_CODE = "reasonCode"
     REASON_CODE_NAME = "reasonCodeName"
+    REBILL_AMOUNT = "rebillAmount"
+    REBILL_CURRENCY = "rebillCurrency"
+    REBILL_DATE = "rebillDate"
+    REBILL_END_DATE = "rebillEndDate"
+    REBILL_FREQUENCY = "rebillFrequency"
+    REBILL_STATUS = "rebillStatus"
+    REFERENCE_NO = "referenceNo"
+    RESPONSE_CODE = "responseCode"
     RETRIEVAL_ID = "retrievalNo"
-    TRANSACT_ID = "guidNo"
+    RETURNED_ACI = "returnedACI"
+    SCHEME_SETTLEMENT_DATE = "schemeSettlementDate"
+    SCHEME_TRANSACTION_ID = "schemeTransactionID"
+    SCRUB_RESULTS = "scrubResults"
     SETTLED_AMOUNT = "approvedAmount"
     SETTLED_CURRENCY = "approvedCurrency"
+    TRANSACTION_TIME = "transactionTime"
+    TRANSACT_ID = "guidNo"
+    VERSION_INDICATOR = "version"
+    WIRECARD_3D_DATA = "INTERNAL0902091104"
+    _3DSECURE_ACS_TRANSACTION_ID = "_3DSECURE_ACS_TRANSACTION_ID"
+    _3DSECURE_CAVV_ALGORITHM = "_3DSECURE_CAVV_ALGORITHM"
+    _3DSECURE_CAVV_UCAF = "_3DSECURE_CAVV_UCAF"
+    _3DSECURE_CHALLENGE_INDICATOR = "_3DSECURE_CHALLENGE_INDICATOR"
+    _3DSECURE_CHALLENGE_MANDATED_INDICATOR = "_3DSECURE_CHALLENGE_MANDATED_INDICATOR"
+    _3DSECURE_DEVICE_COLLECTION_JWT = "_3DSECURE_DEVICE_COLLECTION_JWT"
+    _3DSECURE_DEVICE_COLLECTION_URL = "_3DSECURE_DEVICE_COLLECTION_URL"
+    _3DSECURE_DS_TRANSACTION_ID = "_3DSECURE_DS_TRANSACTION_ID"
+    _3DSECURE_LOOKUP_CHALLENGE_INDICATOR = "_3DSECURE_LOOKUP_CHALLENGE_INDICATOR"
+    _3DSECURE_LOOKUP_REFERENCE_GUID = "_3D_LOOKUP_REFERENCE_GUID"
+    _3DSECURE_LOOKUP_SIGNATURE = "_3DSECURE_LOOKUP_SIGNATURE"
+    _3DSECURE_PARESSTATUS = "_3DSECURE_PARESSTATUS"
+    _3DSECURE_STEP_UP_JWT = "_3DSECURE_STEP_UP_JWT"
+    _3DSECURE_STEP_UP_URL = "_3DSECURE_STEP_UP_URL"
+    _3DSECURE_THREE_DS_SERVER_TRANSACTION_ID = "_3DSECURE_THREE_DS_SERVER_TRANSACTION_ID"
+    _3DSECURE_VERSION = "_3DSECURE_VERSION"
+    _3DSECURE_VERSTATUS = "_3DSECURE_VERSTATUS"
+    _3DSECURE_XID = "_3DSECURE_XID"
 
     """
     init__() - Constructor for class.
@@ -549,7 +542,7 @@ class GatewayResponse(xml.sax.handler.ContentHandler):
     startElement() - Handler for start of XML element.
     """
     def startElement(self, name, attrs):
-        if name == GatewayResponse.DOCUMENT_BASE:  # Opening of document?
+        if name == "gatewayResponse":  # Opening of document?
             self.haveOpenTag = 1  # Have seen open tag
         self.valueBuffer = ""  # Start with clean value
 
@@ -564,7 +557,7 @@ class GatewayResponse(xml.sax.handler.ContentHandler):
     endElement() - Handler for end of XML element.
     """
     def endElement(self, name):
-        if name != GatewayResponse.DOCUMENT_BASE:  # Opening of document?
+        if name != "gatewayResponse":  # Opening of document?
             self.Set(name, self.valueBuffer)
 
 
@@ -587,11 +580,10 @@ class GatewayService:
     TEST_HOST = "dev-gateway.rocketgate.com"
 
     """
-    initialize() - Constructor for class.
+    Constructor for class.
     """
     def __init__(self):
         self.testMode = 0  # Default to live
-        self.rocketGateDNS = GatewayService.LIVE_HOST
         self.rocketGateHost = GatewayService.LIVE_HOST
         self.rocketGateServlet = GatewayService.ROCKETGATE_SERVLET
         self.rocketGatePortNo = GatewayService.ROCKETGATE_PORTNO
@@ -599,30 +591,27 @@ class GatewayService:
         self.rocketGateReadTimeout = GatewayService.ROCKETGATE_READ_TIMEOUT
 
     """
-    SetTestMode() - Select test/development mode.
+    Selects test/development mode.
     """
     def SetTestMode(self, yesNo):
         if yesNo:  # Setting test mode?
             self.testMode = 1  # Set to test mode
             del self.rocketGateHost  # Delete old host list
             self.rocketGateHost = GatewayService.TEST_HOST
-            self.rocketGateDNS = GatewayService.TEST_HOST
         else:
             self.testMode = 0  # Set to live mode
             del self.rocketGateHost  # Delete old host list
             self.rocketGateHost = GatewayService.LIVE_HOST
-            self.rocketGateDNS = GatewayService.LIVE_HOST
 
     """
-    SetHost() - Set the host used by the service
+    Sets the host used by the service
     """
     def SetHost(self, hostName):
         del self.rocketGateHost  # Delete old host list
         self.rocketGateHost = hostName  # Use this host
-        self.rocketGateDNS = hostName
 
     """
-    SetPortNo() - Set the port number used by the service.
+    Sets the port number used by the service.
     """
     def SetPortNo(self, portNo):
         try:
@@ -633,13 +622,13 @@ class GatewayService:
             pass
 
     """
-    SetServlet() - Set servlet used by the service.
+    Sets servlet used by the service.
     """
     def SetServlet(self, servlet):
         self.rocketGateServlet = servlet  # End point
 
     """
-    SetConnectTimeout() - Set connection timeout
+    Sets connection timeout
     """
     def SetConnectTimeout(self, timeout):
         try:
@@ -650,7 +639,7 @@ class GatewayService:
             pass
 
     """
-    SetReadTimeout() - Set read timeout
+    Sets read timeout
     """
     def SetReadTimeout(self, timeout):
         try:
@@ -661,7 +650,7 @@ class GatewayService:
             pass
 
     """
-    SendTransaction() - Send a transaction to a named host.
+    Sends a transaction to a named host.
     """
     def SendTransaction(self, serverName, request, response):
 
@@ -816,7 +805,7 @@ class GatewayService:
         return int(responseCode)  # Give back results
 
     """
-    PerformTransaction() - Perform the transaction described in a gateway request.
+    Performs the transaction described in a gateway request.
     """
     def PerformTransaction(self, request, response):
 
@@ -919,7 +908,7 @@ class GatewayService:
         return 0  # Must quit
 
     """
-    PerformTargetedTransaction() - Send a transaction to a server based upon the GUID.
+    Sends a transaction to a server based upon the GUID.
     """
     def PerformTargetedTransaction(self, request, response):
 
@@ -937,7 +926,7 @@ class GatewayService:
         #	reference transaction.
         #
         referenceGUID = request.Get(GatewayRequest.REFERENCE_GUID)
-        if referenceGUID == None:  # Don't have reference?
+        if referenceGUID is None:  # Don't have reference?
             response.Set(GatewayResponse.RESPONSE_CODE, 4)
             response.Set(GatewayResponse.REASON_CODE, 410)
             return 0  # And quit
@@ -967,7 +956,7 @@ class GatewayService:
         #
         server_name = request.Get("gatewayServer")
         if server_name is None:  # Don't have one?
-            server_name = self.rocketGateDNS  # Start with default
+            server_name = self.rocketGateHost  # Start with default
             separator = server_name.find(".")  # Find first .
             if separator > 0:  # Did we find it?
                 server_name = "{0}-{1}{2}".format(
@@ -984,7 +973,7 @@ class GatewayService:
         return 0  # This failed
 
     """
-    PerformConfirmation() - Perform the confirmation pass that tells the server we have received the transaction reply.
+    Performs the confirmation pass that tells the server we have received the transaction reply.
     """
     def PerformConfirmation(self, request, response):
 
@@ -994,8 +983,7 @@ class GatewayService:
         #
         confirmGUID = response.Get(GatewayResponse.TRANSACT_ID)
         if confirmGUID == None:  # Don't have reference?
-            response.Set(GatewayResponse.EXCEPTION, \
-                         "BUG-CHECK - Missing confirmation GUID")
+            response.Set(GatewayResponse.EXCEPTION, "BUG-CHECK - Missing confirmation GUID")
             response.Set(GatewayResponse.RESPONSE_CODE, 3)
             response.Set(GatewayResponse.REASON_CODE, 307)
             return 0  # And quit
@@ -1015,14 +1003,12 @@ class GatewayService:
         #	If the confirmation failed, copy the reason and response code
         #	into the original response object to override the success.
         #
-        response.Set(GatewayResponse.RESPONSE_CODE, \
-                     confirmResponse.Get(GatewayResponse.RESPONSE_CODE))
-        response.Set(GatewayResponse.REASON_CODE, \
-                     confirmResponse.Get(GatewayResponse.REASON_CODE))
+        response.Set(GatewayResponse.RESPONSE_CODE, confirmResponse.Get(GatewayResponse.RESPONSE_CODE))
+        response.Set(GatewayResponse.REASON_CODE, confirmResponse.Get(GatewayResponse.REASON_CODE))
         return 0  # And quit
 
     """
-    PerformAuthOnly() - Perform an auth-only transaction.
+    Performs an auth-only transaction.
     """
     def PerformAuthOnly(self, request, response):
         request.Set(GatewayRequest.TRANSACTION_TYPE, "CC_AUTH")
@@ -1032,7 +1018,7 @@ class GatewayService:
         return results  # Return results
 
     """
-    PerformTicket() - Perform a Ticket operation for a previous auth-only transaction.
+    Performs a Ticket operation for a previous auth-only transaction.
     """
     def PerformTicket(self, request, response):
         request.Set(GatewayRequest.TRANSACTION_TYPE, "CC_TICKET")
@@ -1040,7 +1026,7 @@ class GatewayService:
         return results  # Return results
 
     """
-    PerformPurchase() - Perform a complete purchase transaction.
+    Performs a complete purchase transaction.
     #
     """
     def PerformPurchase(self, request, response):
@@ -1051,7 +1037,7 @@ class GatewayService:
         return results  # Return results
 
     """
-    PerformCredit() - Perform a Credit operation for a previous transaction.
+    Performs a Credit operation for a previous transaction.
     """
     def PerformCredit(self, request, response):
         request.Set(GatewayRequest.TRANSACTION_TYPE, "CC_CREDIT")
@@ -1069,7 +1055,7 @@ class GatewayService:
         return results  # Return results
 
     """
-    PerformVoid() - Perform a Void operation for a previous transaction.
+    Performs a Void operation for a previous transaction.
     """
     def PerformVoid(self, request, response):
         request.Set(GatewayRequest.TRANSACTION_TYPE, "CC_VOID")
@@ -1077,7 +1063,7 @@ class GatewayService:
         return results  # Return results
 
     """
-    PerformCardScrub() - Perform scrubbing on a card/customer
+    Performs scrubbing on a card/customer
     """
     def PerformCardScrub(self, request, response):
         request.Set(GatewayRequest.TRANSACTION_TYPE, "CARDSCRUB")
@@ -1085,7 +1071,7 @@ class GatewayService:
         return results  # Return results
 
     """
-    PerformRebillCancel() - Schedule cancellation of rebilling.
+    Schedules cancellation of rebilling.
     """
     def PerformRebillCancel(self, request, response):
         request.Set(GatewayRequest.TRANSACTION_TYPE, "REBILL_CANCEL")
@@ -1093,7 +1079,7 @@ class GatewayService:
         return results  # Return results
 
     """
-    PerformRebillUpdate() - Update terms of a rebilling.
+    Updates terms of a rebilling.
     """
     def PerformRebillUpdate(self, request, response):
         request.Set(GatewayRequest.TRANSACTION_TYPE, "REBILL_UPDATE")
@@ -1128,7 +1114,7 @@ class GatewayService:
         return results  # Return results
 
     """
-    PerformCardUpload() - Upload card data to the servers.
+    Uploads card data to the servers.
     """
     def PerformCardUpload(self, request, response):
         request.Set(GatewayRequest.TRANSACTION_TYPE, "CARDUPLOAD")
@@ -1136,7 +1122,7 @@ class GatewayService:
         return results  # Return results
 
     """
-    PerformLookup() - Perform GUID lookup
+    Performs GUID lookup
     """
     def PerformLookup(self, request, response):
         request.Set(GatewayRequest.TRANSACTION_TYPE, "LOOKUP")
@@ -1148,7 +1134,7 @@ class GatewayService:
         return results
 
     """
-    GenerateXsell() - Add an entry to the XsellQueue.
+    Adds an entry to the XsellQueue.
     """
     def GenerateXsell(self, request, response):
         # Apply the transaction type to the request
@@ -1161,7 +1147,7 @@ class GatewayService:
             return self.PerformTransaction(request, response)
 
     """
-    BuildPaymentLink() - Create an embeddable RocketGate hosted payment link
+    Creates an embeddable RocketGate hosted payment link
     """
     def BuildPaymentLink(self, request, response) -> bool:
         if request.get(GatewayRequest.EMBEDDED_FIELDS_TOKEN) is not None:
