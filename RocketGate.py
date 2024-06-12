@@ -25,7 +25,6 @@ whether or not advised of the possibility of damage, regardless of the theory of
 import xml.sax
 import http.client
 import random
-import errno
 import socket
 import ssl
 from urllib.parse import urlsplit
@@ -34,6 +33,7 @@ from urllib.parse import urlsplit
 class GatewayRequest:
 
     VERSION_NUMBER = "PY3.6"
+    VERSION_INDICATOR = "version"
 
     ######################################################################
     #
@@ -631,6 +631,7 @@ class GatewayService:
         #
         #	Gather overrides for transaction.
         #
+        global connection
         urlServlet = request.Get(GatewayRequest.GATEWAY_SERVLET)
         urlPortNo = request.Get(GatewayRequest.GATEWAY_PORTNO)
 
@@ -680,15 +681,13 @@ class GatewayService:
         #
         response.Reset()  # Clear any response data
         requestXML = request.ToXML()  # Get message string
-        headers = {"Content-Type": "text/xml", \
-                   "User-Agent": GatewayService.ROCKETGATE_USER_AGENT}
+        headers = {"Content-Type": "text/xml", "User-Agent": GatewayService.ROCKETGATE_USER_AGENT}
 
         #
         #	Create the HTTP handler and post our request.
         #
         try:
-            connection = http.client.HTTPSConnection(serverName, urlPortNo, \
-                                                     timeout=connectTimeout)
+            connection = http.client.HTTPSConnection(serverName, urlPortNo, timeout=connectTimeout)
             connection.request("POST", urlServlet, requestXML, headers)
             connection.sock.settimeout(readTimeout)
 
@@ -704,8 +703,7 @@ class GatewayService:
             #	If the response was not '200 OK', we must quit
             #
             if results.status != 200:
-                response.Set(GatewayResponse.EXCEPTION, \
-                             str(results.status) + ": " + body)
+                response.Set(GatewayResponse.EXCEPTION,  str(results.status) + ": " + body)
                 response.Set(GatewayResponse.RESPONSE_CODE, 3)
                 response.Set(GatewayResponse.REASON_CODE, 304)
                 return 3  # System error
@@ -866,12 +864,9 @@ class GatewayService:
             # 	transmitted along with the next request.
             #
             request.Set(GatewayRequest.FAILED_SERVER, server_list[index])
-            request.Set(GatewayRequest.FAILED_RESPONSE_CODE, \
-                        response.Get(GatewayResponse.RESPONSE_CODE))
-            request.Set(GatewayRequest.FAILED_REASON_CODE, \
-                        response.Get(GatewayResponse.REASON_CODE))
-            request.Set(GatewayRequest.FAILED_GUID, \
-                        response.Get(GatewayResponse.TRANSACT_ID))
+            request.Set(GatewayRequest.FAILED_RESPONSE_CODE,  response.Get(GatewayResponse.RESPONSE_CODE))
+            request.Set(GatewayRequest.FAILED_REASON_CODE,  response.Get(GatewayResponse.REASON_CODE))
+            request.Set(GatewayRequest.FAILED_GUID,  response.Get(GatewayResponse.TRANSACT_ID))
             index += 1  # Next index
 
         #
@@ -1288,7 +1283,6 @@ class GatewayCodes:
     REASON_INVALID_SUBMERCHANT_ID = 455
     REASON_INVALID_COF_FRAMEWORK = 458
     REASON_INVALID_REFERENCE_SCHEME_TRANSACTION = 459
-    REASON_INVALID_CUSTOMER_ADDRESS = 460
     REASON_INVALID_CUSTOMER_ADDRESS = 460
     REASON_INVALID_CPF_FORMAT = 463
     REASON_INVALID_GOOGLE_PAY_TOKEN = 464
