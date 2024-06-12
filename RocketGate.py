@@ -631,7 +631,7 @@ class GatewayService:
         #
         #	Gather overrides for transaction.
         #
-        global connection
+        connection = None
         urlServlet = request.Get(GatewayRequest.GATEWAY_SERVLET)
         urlPortNo = request.Get(GatewayRequest.GATEWAY_PORTNO)
 
@@ -762,7 +762,8 @@ class GatewayService:
         #	Clean up the connection when we are all done.
         #
         finally:
-            connection.close()  # Done with connection
+            if connection is not None:
+                connection.close()  # Done with connection
 
         #
         #	Parse the response XML and return the response code.
