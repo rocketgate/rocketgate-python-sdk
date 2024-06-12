@@ -33,6 +33,8 @@ from urllib.parse import urlsplit
 
 class GatewayRequest:
 
+    VERSION_NUMBER = "PY3.6"
+
     ######################################################################
     #
     #	Define constant hash values.
@@ -235,8 +237,6 @@ class GatewayRequest:
     USERNAME = "USERNAME"
     USE_3D_SECURE = "USE3DSECURE"
     USE_PRIMARY_SCHEMEID = "USEPRIMARYSCHEMEID"
-    VERSION_INDICATOR = "version"
-    VERSION_NUMBER = "PY3.6"
     XSELL_CUSTOMER_ID = "XSELLCUSTOMERID"
     XSELL_FLAG = "XSELLFLAG"
     XSELL_MERCHANT_ACCOUNT = "XSELLMERCHANTACCOUNT"
@@ -279,39 +279,33 @@ class GatewayRequest:
     _3D_VERSTATUS = "THREEDVERSTATUS"
     _3D_XID = "THREEDXID"
 
-    """
-    init__() - Constructor for class.
-    """
     def __init__(self):
+        """Constructor for class."""
+
         self.parameterList = {}
         self.Set(GatewayRequest.VERSION_INDICATOR, GatewayRequest.VERSION_NUMBER)
 
-    """
-    Set() - Set a value in the parameter list.
-    """
     def Set(self, key, value):
+        """Sets a value in the parameter list."""
+
         self.Clear(key)  # Have key value? Delete it
         self.parameterList[key] = str(value)  # Save the value
 
-    """
-    Clear() - Clear a value in the parameter list.
-    """
     def Clear(self, key):
+        """Clears a value in the parameter list."""
+
         if key in self.parameterList:  # Have key value?
             del self.parameterList[key]  # Delete it
 
-    """
-    Get() - Get a value from the parameter list.
-    """
     def Get(self, key):
+        """Gets a value from the parameter list."""
+
         if key in self.parameterList:  # Have key value?
             return self.parameterList[key]  # Return the value
         return None  # Don't have a value
 
-    """
-    ToXML() - Create an XML document from the hash list.
-    """
     def ToXML(self):
+        """Creates an XML document from the hash list."""
 
         #
         #	Build the document header.
@@ -449,8 +443,6 @@ class GatewayResponse(xml.sax.handler.ContentHandler):
     SETTLED_CURRENCY = "approvedCurrency"
     TRANSACTION_TIME = "transactionTime"
     TRANSACT_ID = "guidNo"
-    VERSION_INDICATOR = "version"
-    WIRECARD_3D_DATA = "INTERNAL0902091104"
     _3DSECURE_ACS_TRANSACTION_ID = "_3DSECURE_ACS_TRANSACTION_ID"
     _3DSECURE_CAVV_ALGORITHM = "_3DSECURE_CAVV_ALGORITHM"
     _3DSECURE_CAVV_UCAF = "_3DSECURE_CAVV_UCAF"
@@ -470,41 +462,35 @@ class GatewayResponse(xml.sax.handler.ContentHandler):
     _3DSECURE_VERSTATUS = "_3DSECURE_VERSTATUS"
     _3DSECURE_XID = "_3DSECURE_XID"
 
-    """
-    init__() - Constructor for class.
-    """
     def __init__(self):
+        """Constructor for class."""
+
         self.parameterList = {}  # Fresh list
         self.haveOpenTag = 0  # Haven't seen <gatewayResponse>
         self.valueBuffer = ""  # No value yet
 
-    """
-    Set() - Set a value in the parameter list.
-    """
     def Set(self, key, value):
+        """Sets a value in the parameter list."""
+
         if key in self.parameterList:  # Have key value?
             del self.parameterList[key]  # Delete it
         self.parameterList[key] = str(value)  # Save the value
 
-    """
-    Reset() - Clear all elements in a response.
-    """
     def Reset(self):
+        """Clears all elements in a response."""
+
         del self.parameterList  # Kill old list
         self.parameterList = {}  # Start with fresh list
 
-    """
-    Get() - Get a value from the parameter list.
-    """
     def Get(self, key):
+        """Gets a value from the parameter list."""
+
         if key in self.parameterList:  # Have key value?
             return self.parameterList[key]  # Return the value
         return None  # Don't have a value
 
-    """
-    SetFromXML() - Set values in a response object using an XML document.
-    """
     def SetFromXML(self, xmlDocument):
+        """Sets values in a response object using an XML document."""
 
         #
         #	Initialize the parsing.
@@ -538,25 +524,22 @@ class GatewayResponse(xml.sax.handler.ContentHandler):
             self.Set(GatewayResponse.RESPONSE_CODE, 3)
             self.Set(GatewayResponse.REASON_CODE, 307)
 
-    """
-    startElement() - Handler for start of XML element.
-    """
     def startElement(self, name, attrs):
+        """Handler for start of XML element."""
+
         if name == "gatewayResponse":  # Opening of document?
             self.haveOpenTag = 1  # Have seen open tag
         self.valueBuffer = ""  # Start with clean value
 
-    """
-    characters() - Handler for element string
-    """
     def characters(self, data):
+        """Handler for element string"""
+
         if self.haveOpenTag:  # Seen open yet?
             self.valueBuffer += data
 
-    """
-    endElement() - Handler for end of XML element.
-    """
     def endElement(self, name):
+        """Handler for end of XML element."""
+
         if name != "gatewayResponse":  # Opening of document?
             self.Set(name, self.valueBuffer)
 
@@ -567,7 +550,7 @@ class GatewayService:
     #	Define constants
     #
     ######################################################################
-    #
+
     ROCKETGATE_SERVLET = "/gateway/servlet/ServiceDispatcherAccess"
     ROCKETGATE_CONNECT_TIMEOUT = 10
     ROCKETGATE_READ_TIMEOUT = 90
@@ -579,10 +562,9 @@ class GatewayService:
     LIVE_HOST_17 = "gateway-17.rocketgate.com"
     TEST_HOST = "dev-gateway.rocketgate.com"
 
-    """
-    Constructor for class.
-    """
     def __init__(self):
+        """Constructor for class."""
+
         self.testMode = 0  # Default to live
         self.rocketGateHost = GatewayService.LIVE_HOST
         self.rocketGateServlet = GatewayService.ROCKETGATE_SERVLET
@@ -590,10 +572,9 @@ class GatewayService:
         self.rocketGateConnectTimeout = GatewayService.ROCKETGATE_CONNECT_TIMEOUT
         self.rocketGateReadTimeout = GatewayService.ROCKETGATE_READ_TIMEOUT
 
-    """
-    Selects test/development mode.
-    """
     def SetTestMode(self, yesNo):
+        """Selects test/development mode."""
+
         if yesNo:  # Setting test mode?
             self.testMode = 1  # Set to test mode
             del self.rocketGateHost  # Delete old host list
@@ -603,17 +584,15 @@ class GatewayService:
             del self.rocketGateHost  # Delete old host list
             self.rocketGateHost = GatewayService.LIVE_HOST
 
-    """
-    Sets the host used by the service
-    """
     def SetHost(self, hostName):
+        """Sets the host used by the service"""
+
         del self.rocketGateHost  # Delete old host list
         self.rocketGateHost = hostName  # Use this host
 
-    """
-    Sets the port number used by the service.
-    """
     def SetPortNo(self, portNo):
+        """Sets the port number used by the service."""
+
         try:
             value = int(portNo)  # Get numeric value
             if value > 0:  # Have a valid value?
@@ -621,16 +600,14 @@ class GatewayService:
         except:
             pass
 
-    """
-    Sets servlet used by the service.
-    """
     def SetServlet(self, servlet):
+        """Sets servlet used by the service."""
+
         self.rocketGateServlet = servlet  # End point
 
-    """
-    Sets connection timeout
-    """
     def SetConnectTimeout(self, timeout):
+        """Sets connection timeout"""
+
         try:
             value = int(timeout)  # Get numeric value
             if value > 0:  # Have a valid value?
@@ -638,10 +615,9 @@ class GatewayService:
         except:
             pass
 
-    """
-    Sets read timeout
-    """
     def SetReadTimeout(self, timeout):
+        """Sets read timeout"""
+
         try:
             value = int(timeout)  # Get numeric value
             if value > 0:  # Have a valid value?
@@ -649,10 +625,8 @@ class GatewayService:
         except:
             pass
 
-    """
-    Sends a transaction to a named host.
-    """
     def SendTransaction(self, serverName, request, response):
+        """Sends a transaction to a named host."""
 
         #
         #	Gather overrides for transaction.
@@ -804,10 +778,8 @@ class GatewayService:
             response.Set(GatewayResponse.REASON_CODE, 400)
         return int(responseCode)  # Give back results
 
-    """
-    Performs the transaction described in a gateway request.
-    """
     def PerformTransaction(self, request, response):
+        """Performs the transaction described in a gateway request."""
 
         #
         #	If EMBEDDED_FIELDS_TOKEN is provided, send the request to the corresponding endpoint
@@ -907,10 +879,8 @@ class GatewayService:
         #
         return 0  # Must quit
 
-    """
-    Sends a transaction to a server based upon the GUID.
-    """
     def PerformTargetedTransaction(self, request, response):
+        """Sends a transaction to a server based upon the GUID."""
 
         #
         #	Clear any error tracking that may be leftover.
@@ -972,10 +942,8 @@ class GatewayService:
             return 1  # This succeeded
         return 0  # This failed
 
-    """
-    Performs the confirmation pass that tells the server we have received the transaction reply.
-    """
     def PerformConfirmation(self, request, response):
+        """Performs the confirmation pass that tells the server we have received the transaction reply."""
 
         #
         #	Verify that we have a transaction ID for the
@@ -1007,39 +975,34 @@ class GatewayService:
         response.Set(GatewayResponse.REASON_CODE, confirmResponse.Get(GatewayResponse.REASON_CODE))
         return 0  # And quit
 
-    """
-    Performs an auth-only transaction.
-    """
     def PerformAuthOnly(self, request, response):
+        """Performs an auth-only transaction."""
+
         request.Set(GatewayRequest.TRANSACTION_TYPE, "CC_AUTH")
         results = self.PerformTransaction(request, response)
         if results:  # Success?
             results = self.PerformConfirmation(request, response)
         return results  # Return results
 
-    """
-    Performs a Ticket operation for a previous auth-only transaction.
-    """
     def PerformTicket(self, request, response):
+        """Performs a Ticket operation for a previous auth-only transaction."""
+
         request.Set(GatewayRequest.TRANSACTION_TYPE, "CC_TICKET")
         results = self.PerformTargetedTransaction(request, response)
         return results  # Return results
 
-    """
-    Performs a complete purchase transaction.
-    #
-    """
     def PerformPurchase(self, request, response):
+        """Performs a complete purchase transaction."""
+
         request.Set(GatewayRequest.TRANSACTION_TYPE, "CC_PURCHASE")
         results = self.PerformTransaction(request, response)
         if results:  # Success?
             results = self.PerformConfirmation(request, response)
         return results  # Return results
 
-    """
-    Performs a Credit operation for a previous transaction.
-    """
     def PerformCredit(self, request, response):
+        """Performs a Credit operation for a previous transaction."""
+
         request.Set(GatewayRequest.TRANSACTION_TYPE, "CC_CREDIT")
 
         #
@@ -1054,34 +1017,30 @@ class GatewayService:
             results = self.PerformTransaction(request, response)
         return results  # Return results
 
-    """
-    Performs a Void operation for a previous transaction.
-    """
     def PerformVoid(self, request, response):
+        """Performs a Void operation for a previous transaction."""
+
         request.Set(GatewayRequest.TRANSACTION_TYPE, "CC_VOID")
         results = self.PerformTargetedTransaction(request, response)
         return results  # Return results
 
-    """
-    Performs scrubbing on a card/customer
-    """
     def PerformCardScrub(self, request, response):
+        """Performs scrubbing on a card/customer"""
+
         request.Set(GatewayRequest.TRANSACTION_TYPE, "CARDSCRUB")
         results = self.PerformTransaction(request, response)
         return results  # Return results
 
-    """
-    Schedules cancellation of rebilling.
-    """
     def PerformRebillCancel(self, request, response):
+        """Schedules cancellation of rebilling."""
+
         request.Set(GatewayRequest.TRANSACTION_TYPE, "REBILL_CANCEL")
         results = self.PerformTransaction(request, response)
         return results  # Return results
 
-    """
-    Updates terms of a rebilling.
-    """
     def PerformRebillUpdate(self, request, response):
+        """Updates terms of a rebilling."""
+
         request.Set(GatewayRequest.TRANSACTION_TYPE, "REBILL_UPDATE")
 
         #
@@ -1113,18 +1072,16 @@ class GatewayService:
             results = self.PerformConfirmation(request, response)
         return results  # Return results
 
-    """
-    Uploads card data to the servers.
-    """
     def PerformCardUpload(self, request, response):
+        """Uploads card data to the servers."""
+
         request.Set(GatewayRequest.TRANSACTION_TYPE, "CARDUPLOAD")
         results = self.PerformTransaction(request, response)
         return results  # Return results
 
-    """
-    Performs GUID lookup
-    """
     def PerformLookup(self, request, response):
+        """Performs GUID lookup"""
+
         request.Set(GatewayRequest.TRANSACTION_TYPE, "LOOKUP")
         referenceGUID = request.Get(GatewayRequest.REFERENCE_GUID)
         if referenceGUID is not None:  # Have reference?
@@ -1133,10 +1090,9 @@ class GatewayService:
             results = self.PerformTransaction(request, response)
         return results
 
-    """
-    Adds an entry to the XsellQueue.
-    """
     def GenerateXsell(self, request, response):
+        """Adds an entry to the XsellQueue."""
+
         # Apply the transaction type to the request
         request.Set(GatewayRequest.TRANSACTION_TYPE, "GENERATEXSELL")
         request.Set(GatewayRequest.REFERENCE_GUID, request.Get(GatewayRequest.XSELL_REFERENCE_XACT))
@@ -1146,10 +1102,9 @@ class GatewayService:
         else:
             return self.PerformTransaction(request, response)
 
-    """
-    Creates an embeddable RocketGate hosted payment link
-    """
     def BuildPaymentLink(self, request, response) -> bool:
+        """Creates an embeddable RocketGate hosted payment link"""
+
         if request.get(GatewayRequest.EMBEDDED_FIELDS_TOKEN) is not None:
             embedded_fields_token = request.get(GatewayRequest.EMBEDDED_FIELDS_TOKEN)
             gateway_url = embedded_fields_token.replace("EmbeddedFieldsProxy", "BuildPaymentLinkSubmit")
