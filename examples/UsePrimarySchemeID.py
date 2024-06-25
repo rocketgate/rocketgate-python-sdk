@@ -1,4 +1,4 @@
-# Copyright notice:
+#! /usr/bin/env python
 
 """
 Copyright notice:

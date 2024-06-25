@@ -1,3 +1,5 @@
+#! /usr/bin/env python
+
 """
 Copyright notice:
 (c) Copyright 2024 RocketGate
@@ -24,42 +26,42 @@ whether or not advised of the possibility of damage, regardless of the theory of
 import time
 from RocketGate import *
 
-# Setup required and testing variables
-time_now = int(time.time())
-cust_id = f"{time_now}.PythonTest"
-inv_id = f"{time_now}.LookupTest"
-merchant_id = "1"
-merchant_password = "testpassword"
-
 # Allocate the objects needed for the test
 request = GatewayRequest()
 response = GatewayResponse()
 service = GatewayService()
 
-# Setup the Auth-Only request
-request.Set(GatewayRequest.MERCHANT_ID, merchant_id)
-request.Set(GatewayRequest.MERCHANT_PASSWORD, merchant_password)
+# Setup the Purchase request
+request.Set(GatewayRequest.MERCHANT_ID, "1")
+request.Set(GatewayRequest.MERCHANT_PASSWORD, "testpassword")
 
-# Customer and invoice ID setup
-request.Set(GatewayRequest.MERCHANT_CUSTOMER_ID, cust_id)
-request.Set(GatewayRequest.MERCHANT_INVOICE_ID, inv_id)
+# For example/testing, set the order ID and customer as the Unix timestamp for sequencing
+time = int(time.time())
+request.Set(GatewayRequest.MERCHANT_CUSTOMER_ID, str(time) + '.PythonTest')
+request.Set(GatewayRequest.MERCHANT_INVOICE_ID, str(time) + '.LifeTest')
 
-# Auth-Only transaction details
+# 3-Day Paid Trial @ $2.00, $99.99 Lifetime/Non-Recur
 request.Set(GatewayRequest.CURRENCY, "USD")
-request.Set(GatewayRequest.AMOUNT, "9.99")
+request.Set(GatewayRequest.AMOUNT, "2.00")
+request.Set(GatewayRequest.REBILL_START, "3")
+request.Set(GatewayRequest.REBILL_AMOUNT, "99.99")
+request.Set(GatewayRequest.REBILL_FREQUENCY, "LIFE")
+
 request.Set(GatewayRequest.CARDNO, "4111111111111111")
 request.Set(GatewayRequest.EXPIRE_MONTH, "02")
 request.Set(GatewayRequest.EXPIRE_YEAR, "2030")
 request.Set(GatewayRequest.CVV2, "999")
+
 request.Set(GatewayRequest.CUSTOMER_FIRSTNAME, "Joe")
 request.Set(GatewayRequest.CUSTOMER_LASTNAME, "PythonTester")
 request.Set(GatewayRequest.EMAIL, "pythontest@fakedomain.com")
-request.Set(GatewayRequest.IPADDRESS, "127.0.0.1")
+
 request.Set(GatewayRequest.BILLING_ADDRESS, "123 Main St")
 request.Set(GatewayRequest.BILLING_CITY, "Las Vegas")
 request.Set(GatewayRequest.BILLING_STATE, "NV")
 request.Set(GatewayRequest.BILLING_ZIPCODE, "89141")
 request.Set(GatewayRequest.BILLING_COUNTRY, "US")
+
 request.Set(GatewayRequest.SCRUB, "IGNORE")
 request.Set(GatewayRequest.CVV2_CHECK, "IGNORE")
 request.Set(GatewayRequest.AVS_CHECK, "IGNORE")
@@ -67,33 +69,15 @@ request.Set(GatewayRequest.AVS_CHECK, "IGNORE")
 # Setup test parameters in the service and request
 service.SetTestMode(True)
 
-# Perform the Auth-Only transaction
-if service.PerformAuthOnly(request, response):
-    print("\nAuth-Only succeeded\n")
+# Perform the Purchase transaction
+if service.PerformPurchase(request, response):
+    print("Purchase succeeded")
+    print("Response Code:", response.Get(GatewayResponse.RESPONSE_CODE))
+    print("Reason Code:", response.Get(GatewayResponse.REASON_CODE))
+    print("GUID:", response.Get(GatewayResponse.TRANSACT_ID))
 
-    # Run additional purchase using MERCHANT_INVOICE_ID
-    request = GatewayRequest()
-    request.Set(GatewayRequest.MERCHANT_ID, merchant_id)
-    request.Set(GatewayRequest.MERCHANT_PASSWORD, merchant_password)
-    request.Set(GatewayRequest.MERCHANT_INVOICE_ID, inv_id)
-
-    # Perform the lookup transaction
-    if service.PerformLookup(request, response):
-        print("\nLookup succeeded\n")
-        print("Reason Code:", response.Get(GatewayResponse.REASON_CODE))
-        print("Auth No:", response.Get(GatewayResponse.AUTH_NO))
-        print("AVS:", response.Get(GatewayResponse.AVS_RESPONSE))
-        print("CVV2:", response.Get(GatewayResponse.CVV2_CODE))
-        print("GUID:", response.Get(GatewayResponse.TRANSACT_ID))
-        print("Account:", response.Get(GatewayResponse.MERCHANT_ACCOUNT))
-        print("Scrub:", response.Get(GatewayResponse.SCRUB_RESULTS))
-    else:
-        print("\nLookup failed\n")
-        print("GUID:", response.Get(GatewayResponse.TRANSACT_ID))
-        print("Reason Code:", response.Get(GatewayResponse.REASON_CODE))
-        print("Exception:", response.Get(GatewayResponse.EXCEPTION))
 else:
-    print("\nAuth-Only failed\n")
+    print("Purchase failed")
     print("GUID:", response.Get(GatewayResponse.TRANSACT_ID))
     print("Response Code:", response.Get(GatewayResponse.RESPONSE_CODE))
     print("Reason Code:", response.Get(GatewayResponse.REASON_CODE))

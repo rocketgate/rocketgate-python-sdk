@@ -1,3 +1,5 @@
+#! /usr/bin/env python
+
 """
 Copyright notice:
 (c) Copyright 2024 RocketGate
@@ -24,26 +26,35 @@ whether or not advised of the possibility of damage, regardless of the theory of
 import time
 from RocketGate import *
 
-# Object instantiation
+"""
+Ensure you have set up your merch_opts:
+3DSAPIKey and 3DSAPIIdentifier
+and
+merch_account.macct_3ds_org_unit_id
+
+or this test will not "work correctly"
+"""
+
+# Allocate the objects we need for the test.
 request = GatewayRequest()
 response = GatewayResponse()
 service = GatewayService()
 
-# Setup the Auth-Only request
+# Setup the Auth-Only request.
 request.Set(GatewayRequest.MERCHANT_ID, "1")
 request.Set(GatewayRequest.MERCHANT_PASSWORD, "testpassword")
 
 # For example/testing, we set the order id and customer as the unix timestamp as a convenient sequencing value
 # appending a test name to the order id to facilitate some clarity when reviewing the tests
-current_time = str(int(time.time()))
-cust_id = current_time + '.PythonTest'
-inv_id = current_time + '.3DSTest'
+current_time = int(time.time())
+cust_id = f"{current_time}.PythonTest"
+inv_id = f"{current_time}.3DSTest"
 
 request.Set(GatewayRequest.MERCHANT_CUSTOMER_ID, cust_id)
 request.Set(GatewayRequest.MERCHANT_INVOICE_ID, inv_id)
 
 request.Set(GatewayRequest.CURRENCY, "USD")
-request.Set(GatewayRequest.AMOUNT, "9.99")    # bill 9.99 now
+request.Set(GatewayRequest.AMOUNT, "9.99")  # bill 9.99 now
 
 request.Set(GatewayRequest.CARDNO, "4000000000001091")  # This card will trigger a 3DS 2.0 stepUp in the TestProcessor
 request.Set(GatewayRequest.EXPIRE_MONTH, "02")
@@ -67,19 +78,21 @@ request.Set(GatewayRequest.AVS_CHECK, "IGNORE")
 
 # Request 3DS
 request.Set(GatewayRequest.USE_3D_SECURE, "TRUE")
-request.Set(GatewayRequest.BROWSER_USER_AGENT, "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_14_3) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/72.0.3626.96 Safari/537.36")
-request.Set(GatewayRequest.BROWSER_ACCEPT_HEADER, "text/html,application/xhtml+xml,application/xml;q=0.9,image/webp,image/apng,*/*;q=0.8")
+request.Set(GatewayRequest.BROWSER_USER_AGENT,
+            "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_14_3) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/72.0.3626.96 Safari/537.36")
+request.Set(GatewayRequest.BROWSER_ACCEPT_HEADER,
+            "text/html,application/xhtml+xml,application/xml;q=0.9,image/webp,image/apng,*/*;q=0.8")
 
-# Setup test parameters in the service and request
+# Setup test parameters in the service and request.
 service.SetTestMode(True)
 
-# Step 1: Perform the BIN intelligence transaction
+# Step 1: Perform the BIN intelligence transaction.
 service.PerformPurchase(request, response)
 
 response_code = response.Get(GatewayResponse.RESPONSE_CODE)
 reason_code = response.Get(GatewayResponse.REASON_CODE)
 
-if response_code != 2 and reason_code != 225:
+if response_code != 2 and reason_code != 225:  # RESPONSE_RISK_FAIL and REASON_3DSECURE_INITIATION
     print("Response Code:", response_code)
     print("Reason Code:", reason_code)
     exit("error: expected response 2 and reason 225")
@@ -92,10 +105,17 @@ print("  Device Fingerprinting JWT:", response.Get(GatewayResponse._3DSECURE_DEV
 print("  Exception:", response.Get(GatewayResponse.EXCEPTION))
 
 # Recycle the first request and add two new fields
-request.Set(GatewayRequest._3DSECURE_DF_REFERENCE_ID, "fake")
+# request.Set(GatewayRequest._3DSECURE_DF_REFERENCE_ID, "fake")
 request.Set(GatewayRequest._3DSECURE_REDIRECT_URL, "fake")
 
-# Step 2: Perform the Lookup transaction
+request.Set(GatewayRequest.BROWSER_JAVA_ENABLED, "TRUE")
+request.Set(GatewayRequest.BROWSER_LANGUAGE, "en-CA")
+request.Set(GatewayRequest.BROWSER_COLOR_DEPTH, "32")
+request.Set(GatewayRequest.BROWSER_SCREEN_HEIGHT, "1080")
+request.Set(GatewayRequest.BROWSER_SCREEN_WIDTH, "1920")
+request.Set(GatewayRequest.BROWSER_TIME_ZONE, "-240")
+
+# Step 2: Perform the Lookup transaction.
 if service.PerformPurchase(request, response):
     print("Purchase succeeded")
     print("Response Code:", response.Get(GatewayResponse.RESPONSE_CODE))
@@ -103,6 +123,7 @@ if service.PerformPurchase(request, response):
     print("GUID:", response.Get(GatewayResponse.TRANSACT_ID))
     print("Account:", response.Get(GatewayResponse.MERCHANT_ACCOUNT))
     print("Exception:", response.Get(GatewayResponse.EXCEPTION))
+
 elif response.Get(GatewayResponse.REASON_CODE) == "202":
     print("3DS Lookup succeeded")
     print("  GUID:", response.Get(GatewayResponse.TRANSACT_ID))
@@ -113,7 +134,7 @@ elif response.Get(GatewayResponse.REASON_CODE) == "202":
     print("  STEP-UP URL:", response.Get(GatewayResponse._3DSECURE_STEP_UP_URL))
     print("  STEP-UP JWT:", response.Get(GatewayResponse._3DSECURE_STEP_UP_JWT))
 
-    # Setup the 3rd request
+    # Setup the 3rd request.
     request = GatewayRequest()
 
     request.Set(GatewayRequest.MERCHANT_ID, "1")
@@ -133,7 +154,7 @@ elif response.Get(GatewayResponse.REASON_CODE) == "202":
     request.Set(GatewayRequest.CVV2_CHECK, "IGNORE")
     request.Set(GatewayRequest.AVS_CHECK, "IGNORE")
 
-    # Step 3: Perform the Purchase transaction
+    # Step 3: Perform the Purchase transaction.
     if service.PerformPurchase(request, response):
         print("Purchase succeeded")
         print("  Response Code:", response.Get(GatewayResponse.RESPONSE_CODE))
@@ -145,6 +166,7 @@ elif response.Get(GatewayResponse.REASON_CODE) == "202":
         print("  Response Code:", response.Get(GatewayResponse.RESPONSE_CODE))
         print("  Reason Code:", response.Get(GatewayResponse.REASON_CODE))
         print("  Exception:", response.Get(GatewayResponse.EXCEPTION))
+
 else:
     print("Purchase failed")
     print("  GUID:", response.Get(GatewayResponse.TRANSACT_ID))

@@ -26,11 +26,10 @@ whether or not advised of the possibility of damage, regardless of the theory of
 import datetime
 from RocketGate import *
 
-
 the_time = datetime.datetime.now().strftime("%Y%m%d.%H%M%S")
 
 cust_id = the_time + ".PythonTest"
-inv_id = the_time + ".UploadPlTest"
+inv_id = the_time + ".TicketTest"
 merch_id = "1"
 merch_password = "testpassword"
 
@@ -39,7 +38,7 @@ response = GatewayResponse()
 service = GatewayService()
 
 #
-#	Setup the only request.
+#	Setup the Auth-Only request.
 #
 request.Set(GatewayRequest.MERCHANT_ID, merch_id)
 request.Set(GatewayRequest.MERCHANT_PASSWORD, merch_password)
@@ -47,9 +46,8 @@ request.Set(GatewayRequest.MERCHANT_PASSWORD, merch_password)
 request.Set(GatewayRequest.MERCHANT_CUSTOMER_ID, cust_id)
 request.Set(GatewayRequest.MERCHANT_INVOICE_ID, inv_id)
 
-request.Set(GatewayRequest.AMOUNT, 1.99)
+request.Set(GatewayRequest.AMOUNT, 9.99)
 request.Set(GatewayRequest.CURRENCY, "USD")
-request.Set(GatewayRequest.REBILL_FREQUENCY, "MONTHLY")
 
 request.Set(GatewayRequest.CARDNO, "4111111111111111")
 request.Set(GatewayRequest.EXPIRE_MONTH, "02")
@@ -79,44 +77,55 @@ request.Set(GatewayRequest.SCRUB, "IGNORE")
 #
 service.SetTestMode(1)
 
+
 #
-#      Perform the Purchase transaction.
+#      Perform the Auth-Only transaction.
 #
-status = service.PerformPurchase(request, response)
+status = service.PerformAuthOnly(request, response)
+
 if status:
-    print("Purchase succeeded")
+    print("Auth-Only succeeded")
     print("GUID: ", response.Get(GatewayResponse.TRANSACT_ID))
-
-    # Update Personal Information
-    ##
-    ##  This would normally be two separate processes, 
-    ##  but for example's sake is in one process (thus we clear and set a new GatewayRequest object)
-    ##  The key values required are MERCHANT_CUSTOMER_ID and MERCHANT_INVOICE_ID.
-    ## 
-    request = GatewayRequest()
-    request.Set(GatewayRequest.MERCHANT_ID, merch_id)
-    request.Set(GatewayRequest.MERCHANT_PASSWORD, merch_password)
-
-    request.Set(GatewayRequest.MERCHANT_CUSTOMER_ID, cust_id)
-    request.Set(GatewayRequest.MERCHANT_INVOICE_ID, inv_id)
-
-    request.Set(GatewayRequest.EMAIL, "Pythontest_updated@fakedomain.com")
-    request.Set(GatewayRequest.USERNAME, "Pythontest_user_updated")
-    request.Set(GatewayRequest.CUSTOMER_PASSWORD, "Pythontest_pass_updated")
-
-    status = service.PerformRebillUpdate(request, response)
-    if status:
-        print("\nUpdate PI succeeded")
-
-    else:
-        print("\nUpdate PI failed")
-        print("  Reason Code: ", response.Get(GatewayResponse.REASON_CODE))
-
+    print("Response Code: ", response.Get(GatewayResponse.RESPONSE_CODE))
+    print("Reason Code: ", response.Get(GatewayResponse.REASON_CODE))
+    print("AuthNo: ", response.Get(GatewayResponse.AUTH_NO))
+    print("AVS: ", response.Get(GatewayResponse.AVS_RESPONSE))
+    print("CVV2: ", response.Get(GatewayResponse.CVV2_CODE))
+    print("Card Hash: ", response.Get(GatewayResponse.CARD_HASH))
+    print("Card Region: ", response.Get(GatewayResponse.CARD_REGION))
+    print("Card Description: ", response.Get(GatewayResponse.CARD_DESCRIPTION))
+    print("Account: ", response.Get(GatewayResponse.MERCHANT_ACCOUNT))
+    print("Scrub: ", response.Get(GatewayResponse.SCRUB_RESULTS))
 else:
-    print("Test Purchase failed\n")
+    print("Auth-Only failed")
     print("GUID: ", response.Get(GatewayResponse.TRANSACT_ID))
+    print("Response Code: ", response.Get(GatewayResponse.RESPONSE_CODE))
     print("Reason Code: ", response.Get(GatewayResponse.REASON_CODE))
     print("Exception: ", response.Get(GatewayResponse.EXCEPTION))
     print("Scrub: ", response.Get(GatewayResponse.SCRUB_RESULTS))
     exit()
 
+#
+#	Setup the ticket transaction.
+#
+request = GatewayRequest()
+request.Set(GatewayRequest.MERCHANT_ID, merch_id)
+request.Set(GatewayRequest.MERCHANT_PASSWORD, merch_password)
+request.Set(GatewayRequest.TRANSACT_ID, response.Get(GatewayResponse.TRANSACT_ID))
+
+#
+#	Perform the ticket transaction.
+#
+status = service.PerformTicket(request, response)
+
+if status:
+    print("Ticket succeeded")
+    print("GUID: ", response.Get(GatewayResponse.TRANSACT_ID))
+    print("Response Code: ", response.Get(GatewayResponse.RESPONSE_CODE))
+    print("Reason Code: ", response.Get(GatewayResponse.REASON_CODE))
+    print("AuthNo: ", response.Get(GatewayResponse.AUTH_NO))
+else:
+    print("Ticket failed")
+    print("GUID: ", response.Get(GatewayResponse.TRANSACT_ID))
+    print("Response Code: ", response.Get(GatewayResponse.RESPONSE_CODE))
+    print("Reason Code: ", response.Get(GatewayResponse.REASON_CODE))

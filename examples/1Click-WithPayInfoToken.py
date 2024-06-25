@@ -1,6 +1,8 @@
+#! /usr/bin/env python
+
 """
 Copyright notice:
-(c) Copyright 2024 RocketGate
+(c) Copyright 2018 RocketGate
 All rights reserved.
 
 The copyright notice must not be removed without specific, prior
@@ -24,84 +26,82 @@ whether or not advised of the possibility of damage, regardless of the theory of
 import time
 from RocketGate import *
 
-# Setup required and testing variables
+"""
+Example Scenario:
+ $9.99 USD purchase.
+ Subsequently, the user wants to make another $8.99 purchase using the card on file (PayInfo Token)
+"""
+
+# Generate the required variables for the test
 time = int(time.time())
-cust_id = str(time) + '.PythonTest'
-inv_id = str(time) + '.CreditTest'
+cust_id = f"{time}.PythonTest"
+inv_id = f"{time}.PayInfoTest"
 merchant_id = "1"
 merchant_password = "testpassword"
 
-# Allocate the objects needed for the test
+# Initialize the objects required for the test
 request = GatewayRequest()
 response = GatewayResponse()
 service = GatewayService()
 
-# Setup the Purchase request
-request.Set(GatewayRequest.MERCHANT_ID, "1")
-request.Set(GatewayRequest.MERCHANT_PASSWORD, "testpassword")
-
-# Setting the order ID and customer as the Unix timestamp for sequencing value
+# Set up the Purchase request
+request.Set(GatewayRequest.MERCHANT_ID, merchant_id)
+request.Set(GatewayRequest.MERCHANT_PASSWORD, merchant_password)
 request.Set(GatewayRequest.MERCHANT_CUSTOMER_ID, cust_id)
 request.Set(GatewayRequest.MERCHANT_INVOICE_ID, inv_id)
-
-# $9.99 purchase details
 request.Set(GatewayRequest.CURRENCY, "USD")
 request.Set(GatewayRequest.AMOUNT, "9.99")
+
+# Card details
 request.Set(GatewayRequest.CARDNO, "4111111111111111")
 request.Set(GatewayRequest.EXPIRE_MONTH, "02")
 request.Set(GatewayRequest.EXPIRE_YEAR, "2030")
 request.Set(GatewayRequest.CVV2, "999")
 
+# Customer details
 request.Set(GatewayRequest.CUSTOMER_FIRSTNAME, "Joe")
 request.Set(GatewayRequest.CUSTOMER_LASTNAME, "PythonTester")
-request.Set(GatewayRequest.EMAIL, "pythontest@fakedomain.com")
-request.Set(GatewayRequest.IPADDRESS, "127.0.0.1")
+request.Set(GatewayRequest.EMAIL, "pythontester@fakedomain.com")
 
+# Billing address
 request.Set(GatewayRequest.BILLING_ADDRESS, "123 Main St")
 request.Set(GatewayRequest.BILLING_CITY, "Las Vegas")
 request.Set(GatewayRequest.BILLING_STATE, "NV")
 request.Set(GatewayRequest.BILLING_ZIPCODE, "89141")
 request.Set(GatewayRequest.BILLING_COUNTRY, "US")
 
-# Risk/Scrub Request Setting
+# Risk/Scrub settings
 request.Set(GatewayRequest.SCRUB, "IGNORE")
 request.Set(GatewayRequest.CVV2_CHECK, "IGNORE")
 request.Set(GatewayRequest.AVS_CHECK, "IGNORE")
 
-# Setup test parameters in the service and request
+# Test mode setup
 service.SetTestMode(True)
 
 # Perform the Purchase transaction
 if service.PerformPurchase(request, response):
-    print("Purchase succeeded")
-    print("Response Code:", response.Get(GatewayResponse.RESPONSE_CODE))
-    print("Reason Code:", response.Get(GatewayResponse.REASON_CODE))
-    print("Auth No:", response.Get(GatewayResponse.AUTH_NO))
-    print("AVS:", response.Get(GatewayResponse.AVS_RESPONSE))
-    print("CVV2:", response.Get(GatewayResponse.CVV2_CODE))
+    print("Initial Purchase succeeded")
     print("GUID:", response.Get(GatewayResponse.TRANSACT_ID))
-    print("Account:", response.Get(GatewayResponse.MERCHANT_ACCOUNT))
-    print("Scrub:", response.Get(GatewayResponse.SCRUB_RESULTS))
 
-    # Set the transaction to credit
-    request.Set(GatewayRequest.TRANSACT_ID, response.Get(GatewayResponse.TRANSACT_ID))
+    # Get the PayInfo Token for the next transaction
+    payinfo_transact_id = response.Get(GatewayResponse.TRANSACT_ID)
 
-    # Perform the credit transaction
-    if service.PerformCredit(request, response):
-        print("Credit succeeded")
-        print("Response Code:", response.Get(GatewayResponse.RESPONSE_CODE))
-        print("Reason Code:", response.Get(GatewayResponse.REASON_CODE))
+    # Run an additional purchase using the PayInfo Token
+    secondary_request = GatewayRequest()
+    secondary_request.Set(GatewayRequest.MERCHANT_ID, merchant_id)
+    secondary_request.Set(GatewayRequest.MERCHANT_PASSWORD, merchant_password)
+    secondary_request.Set(GatewayRequest.MERCHANT_CUSTOMER_ID, cust_id)
+    secondary_request.Set(GatewayRequest.PAYINFO_TRANSACT_ID, payinfo_transact_id)
+    secondary_request.Set(GatewayRequest.MERCHANT_INVOICE_ID, inv_id)
+    secondary_request.Set(GatewayRequest.AMOUNT, "8.99")
+    
+    if service.PerformPurchase(secondary_request, response):
+        print("PayInfo Purchase succeeded")
         print("GUID:", response.Get(GatewayResponse.TRANSACT_ID))
-        print("Account:", response.Get(GatewayResponse.MERCHANT_ACCOUNT))
     else:
-        print("Credit failed")
-        print("GUID:", response.Get(GatewayResponse.TRANSACT_ID))
-        print("Response Code:", response.Get(GatewayResponse.RESPONSE_CODE))
-        print("Reason Code:", response.Get(GatewayResponse.REASON_CODE))
-        print("Exception:", response.Get(GatewayResponse.EXCEPTION))
-
+        print("PayInfo Purchase failed")
 else:
-    print("Purchase failed")
+    print("Initial Purchase failed")
     print("GUID:", response.Get(GatewayResponse.TRANSACT_ID))
     print("Response Code:", response.Get(GatewayResponse.RESPONSE_CODE))
     print("Reason Code:", response.Get(GatewayResponse.REASON_CODE))

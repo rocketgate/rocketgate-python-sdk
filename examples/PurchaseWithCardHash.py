@@ -23,20 +23,20 @@ including, without limitation, damages resulting from loss of use, data or profi
 whether or not advised of the possibility of damage, regardless of the theory of liability.
 """
 
+import datetime
+from RocketGate import *
+
 """
 Example Scenario:
 $9.99 USD purchase.
 Subsequently, the user wants to make another $8.99 purchase using the card on file (CardHash)
 """
 
-import datetime
-from RocketGate import *
-
 request = GatewayRequest()
 response = GatewayResponse()
 service = GatewayService()
 
-merchID = "1";
+merchID = "1"
 merchPassword = "testpassword"
 
 # For example/testing, we set the order id and customer as the unix timestamp as a convenient sequencing value
@@ -88,20 +88,20 @@ service.SetTestMode(1)
 #      Perform the Purchase transaction.
 #
 status = service.PerformPurchase(request, response)
-if (status):
-    print ("Purchase succeeded")
-    print ("GUID: ", response.Get(GatewayResponse.TRANSACT_ID))
-    print ("Reason Code: ", response.Get(GatewayResponse.REASON_CODE))
-    print ("CardHash: ", response.Get(GatewayResponse.CARD_HASH))
+if status:
+    print("Purchase succeeded")
+    print("GUID: ", response.Get(GatewayResponse.TRANSACT_ID))
+    print("Reason Code: ", response.Get(GatewayResponse.REASON_CODE))
+    print("CardHash: ", response.Get(GatewayResponse.CARD_HASH))
 
     card_hash = response.Get(GatewayResponse.CARD_HASH)
 
-    ## Run additional purchase using card_hash
-    ##
-    ##  This would normally be two separate processes, 
-    ##  but for example's sake is in one process (thus we clear and set a new GatewayRequest object)
-    ##  The key values required are MERCHANT_CUSTOMER_ID and MERCHANT_INVOICE_ID.
-    ## 
+    #Run additional purchase using card_hash
+    #
+    #This would normally be two separate processes,
+    #but for example's sake is in one process (thus we clear and set a new GatewayRequest object)
+    #The key values required are MERCHANT_CUSTOMER_ID and MERCHANT_INVOICE_ID.
+    #
     request = GatewayRequest()
     request.Set(GatewayRequest.MERCHANT_ID, merchID)
     request.Set(GatewayRequest.MERCHANT_PASSWORD, merchPassword)
@@ -113,19 +113,18 @@ if (status):
     request.Set(GatewayRequest.AMOUNT, 8.99)
 
     status = service.PerformPurchase(request, response)
-    if (status):
-        print ("CardHash Purchase succeeded")
-        print ("GUID: ", response.Get(GatewayResponse.TRANSACT_ID))
+    if status:
+        print("CardHash Purchase succeeded")
+        print("GUID: ", response.Get(GatewayResponse.TRANSACT_ID))
     else:
-        print ("CardHash Purchase failed")
-        print ("GUID: ", response.Get(GatewayResponse.TRANSACT_ID))
+        print("CardHash Purchase failed")
+        print("GUID: ", response.Get(GatewayResponse.TRANSACT_ID))
 
 else:
-    print ("Purchase failed\n")
-    print ("GUID: ", response.Get(GatewayResponse.TRANSACT_ID))
-    print ("Response Code: ", response.Get(GatewayResponse.RESPONSE_CODE))
-    print ("Reason Code: ", response.Get(GatewayResponse.REASON_CODE))
-    print ("Exception: ", response.Get(GatewayResponse.EXCEPTION))
-    print ("Scrub: ", response.Get(GatewayResponse.SCRUB_RESULTS))
+    print("Purchase failed\n")
+    print("GUID: ", response.Get(GatewayResponse.TRANSACT_ID))
+    print("Response Code: ", response.Get(GatewayResponse.RESPONSE_CODE))
+    print("Reason Code: ", response.Get(GatewayResponse.REASON_CODE))
+    print("Exception: ", response.Get(GatewayResponse.EXCEPTION))
+    print("Scrub: ", response.Get(GatewayResponse.SCRUB_RESULTS))
     exit()
-

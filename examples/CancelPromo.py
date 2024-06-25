@@ -1,3 +1,5 @@
+#! /usr/bin/env python
+
 """
 Copyright notice:
 (c) Copyright 2024 RocketGate
@@ -21,23 +23,23 @@ including, without limitation, damages resulting from loss of use, data or profi
 whether or not advised of the possibility of damage, regardless of the theory of liability.
 """
 
-"""
-Example $3.00 3x day trial rebills to $9.99 monthly.
- Subsequently, Generate CrossSale for $1 4x day trial rebills $7.99/month
- Requires Merchant Option set: PermitMultipleMemberships=true 
-"""
-
 import time
 from RocketGate import *
+
+"""
+Example $9.99 USD monthly subscription purchase.
+Subsequently, for example as a cancel promo, the subscription
+is modified to a USD $25.95 quarterly effective on it's next rebill date.
+"""
 
 # Setup required and testing variables
 time_now = int(time.time())
 cust_id = f"{time_now}.PythonTest"
-inv_id = f"{time_now}.TestGenerateXsell"
+inv_id = f"{time_now}.CancelPromoTest"
 merchant_id = "1"
 merchant_password = "testpassword"
 
-# Allocate the objects needed for the test
+# Allocate the objects needed
 request = GatewayRequest()
 response = GatewayResponse()
 service = GatewayService()
@@ -50,11 +52,9 @@ request.Set(GatewayRequest.MERCHANT_PASSWORD, merchant_password)
 request.Set(GatewayRequest.MERCHANT_CUSTOMER_ID, cust_id)
 request.Set(GatewayRequest.MERCHANT_INVOICE_ID, inv_id)
 
-# $3.00 3x day trial rebills to $9.99 monthly
+# Monthly subscription purchase
 request.Set(GatewayRequest.CURRENCY, "USD")
-request.Set(GatewayRequest.AMOUNT, "3.00")
-request.Set(GatewayRequest.REBILL_START, "3")
-request.Set(GatewayRequest.REBILL_AMOUNT, "9.99")
+request.Set(GatewayRequest.AMOUNT, "9.99")
 request.Set(GatewayRequest.REBILL_FREQUENCY, "MONTHLY")
 
 # Card details
@@ -66,44 +66,51 @@ request.Set(GatewayRequest.CVV2, "999")
 # Customer information
 request.Set(GatewayRequest.CUSTOMER_FIRSTNAME, "Joe")
 request.Set(GatewayRequest.CUSTOMER_LASTNAME, "PythonTester")
-request.Set(GatewayRequest.EMAIL, "pythontest@fakedomain.com")
-request.Set(GatewayRequest.USERNAME, "pythontest_user")
-request.Set(GatewayRequest.CUSTOMER_PASSWORD, "pythontest_pass")
+request.Set(GatewayRequest.EMAIL, "pythoontest@fakedomain.com")
+request.Set(GatewayRequest.IPADDRESS, "10.10.10.10")
 
-# Setup test mode parameters in service and request
+# Billing details
+request.Set(GatewayRequest.BILLING_ADDRESS, "123 Main St")
+request.Set(GatewayRequest.BILLING_CITY, "Las Vegas")
+request.Set(GatewayRequest.BILLING_STATE, "NV")
+request.Set(GatewayRequest.BILLING_ZIPCODE, "89141")
+request.Set(GatewayRequest.BILLING_COUNTRY, "US")
+
+# Risk/Scrub Request Setting
+request.Set(GatewayRequest.SCRUB, "IGNORE")
+
+# Set test mode in service and request
 service.SetTestMode(True)
 
 # Perform the Purchase transaction
 if service.PerformPurchase(request, response):
-    print("Test Purchase succeeded")
-    print("CUST:", cust_id)
+    print("Purchase succeeded")
+    print("Response Code:", response.Get(GatewayResponse.RESPONSE_CODE))
+    print("Reason Code:", response.Get(GatewayResponse.REASON_CODE))
+    print("Auth No:", response.Get(GatewayResponse.AUTH_NO))
+    print("AVS:", response.Get(GatewayResponse.AVS_RESPONSE))
+    print("CVV2:", response.Get(GatewayResponse.CVV2_CODE))
     print("GUID:", response.Get(GatewayResponse.TRANSACT_ID))
     print("Account:", response.Get(GatewayResponse.MERCHANT_ACCOUNT))
+    print("Scrub:", response.Get(GatewayResponse.SCRUB_RESULTS))
 
-    # Update Sticky MID
+    # Upgrade Membership
     request = GatewayRequest()
     request.Set(GatewayRequest.MERCHANT_ID, merchant_id)
     request.Set(GatewayRequest.MERCHANT_PASSWORD, merchant_password)
     request.Set(GatewayRequest.MERCHANT_CUSTOMER_ID, cust_id)
-
-    # Different invoice id for xsell
-    inv_id = f"{time_now + 1}.TestGenerateXsell"
     request.Set(GatewayRequest.MERCHANT_INVOICE_ID, inv_id)
+    request.Set(GatewayRequest.REBILL_AMOUNT, "25.95")
+    request.Set(GatewayRequest.REBILL_FREQUENCY, "QUARTERLY")
 
-    # Generate CrossSale
-    request.Set(GatewayRequest.CURRENCY, "USD")
-    request.Set(GatewayRequest.AMOUNT, "1.00")
-    request.Set(GatewayRequest.REBILL_START, "4")
-    request.Set(GatewayRequest.REBILL_AMOUNT, "7.99")
-    request.Set(GatewayRequest.REBILL_FREQUENCY, "MONTHLY")
-
-    if service.GenerateXsell(request, response):
-        print("GenerateXsell Succeeded")
+    if service.PerformRebillUpdate(request, response):
+        print("Update succeeded")
     else:
-        print("GenerateXsell Failed")
-        print("Reason Code:", response.Get(GatewayResponse.REASON_CODE))
+        print("Update failed")
 else:
-    print("Test Purchase Failed!")
+    print("Purchase failed")
+    print("GUID:", response.Get(GatewayResponse.TRANSACT_ID))
     print("Response Code:", response.Get(GatewayResponse.RESPONSE_CODE))
     print("Reason Code:", response.Get(GatewayResponse.REASON_CODE))
     print("Exception:", response.Get(GatewayResponse.EXCEPTION))
+    print("Scrub:", response.Get(GatewayResponse.SCRUB_RESULTS))

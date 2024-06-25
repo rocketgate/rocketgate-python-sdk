@@ -1,3 +1,5 @@
+#! /usr/bin/env python
+
 """
 Copyright notice:
 (c) Copyright 2024 RocketGate
@@ -21,20 +23,8 @@ including, without limitation, damages resulting from loss of use, data or profi
 whether or not advised of the possibility of damage, regardless of the theory of liability.
 """
 
-"""
-Example $29.99 USD non-recurring purchase
-Subsequently, modify to a USD $19.95 monthly.. effective on it's next rebill date.
-"""
-
 import time
 from RocketGate import *
-
-# Setup required and testing variables
-time_now = int(time.time())
-cust_id = f"{time_now}.PythonTest"
-inv_id = f"{time_now}.UpgrdToRebillTest"
-merchant_id = "1"
-merchant_password = "testpassword"
 
 # Allocate the objects needed for the test
 request = GatewayRequest()
@@ -42,18 +32,20 @@ response = GatewayResponse()
 service = GatewayService()
 
 # Setup the Purchase request
-request.Set(GatewayRequest.MERCHANT_ID, merchant_id)
-request.Set(GatewayRequest.MERCHANT_PASSWORD, merchant_password)
+request.Set(GatewayRequest.MERCHANT_ID, "1")
+request.Set(GatewayRequest.MERCHANT_PASSWORD, "testpassword")
 
-# Customer and invoice ID setup
+# Setting the order ID and customer as the Unix timestamp for sequencing
+time = int(time.time())
+cust_id = f"{time}.PHPTest"
+inv_id = f"{time}.RebillStatusTest"
+
+# $9.99/month subscription details
 request.Set(GatewayRequest.MERCHANT_CUSTOMER_ID, cust_id)
 request.Set(GatewayRequest.MERCHANT_INVOICE_ID, inv_id)
-
-# Non-recurring purchase details
 request.Set(GatewayRequest.CURRENCY, "USD")
-request.Set(GatewayRequest.AMOUNT, "29.99")
+request.Set(GatewayRequest.AMOUNT, "9.99")
 request.Set(GatewayRequest.REBILL_FREQUENCY, "MONTHLY")
-request.Set(GatewayRequest.REBILL_COUNT, "0")
 
 request.Set(GatewayRequest.CARDNO, "4111111111111111")
 request.Set(GatewayRequest.EXPIRE_MONTH, "02")
@@ -63,51 +55,52 @@ request.Set(GatewayRequest.CVV2, "999")
 request.Set(GatewayRequest.CUSTOMER_FIRSTNAME, "Joe")
 request.Set(GatewayRequest.CUSTOMER_LASTNAME, "PythonTester")
 request.Set(GatewayRequest.EMAIL, "pythontest@fakedomain.com")
-
 request.Set(GatewayRequest.BILLING_ADDRESS, "123 Main St")
 request.Set(GatewayRequest.BILLING_CITY, "Las Vegas")
 request.Set(GatewayRequest.BILLING_STATE, "NV")
 request.Set(GatewayRequest.BILLING_ZIPCODE, "89141")
 request.Set(GatewayRequest.BILLING_COUNTRY, "US")
 
-# Risk/Scrub Request Setting
 request.Set(GatewayRequest.SCRUB, "IGNORE")
 request.Set(GatewayRequest.CVV2_CHECK, "IGNORE")
 request.Set(GatewayRequest.AVS_CHECK, "IGNORE")
 
-# Setup test parameters in the service and request
-service.SetTestMode(True)
+service.SetTestMode(True)  # Setup test parameters in the service
 
 # Perform the Purchase transaction
 if service.PerformPurchase(request, response):
-    print("1. Non-recurring join succeeded")
-    print("  GUID:", response.Get(GatewayResponse.TRANSACT_ID))
+    print("1. Purchase succeeded")
 
-    # Upgrade Membership
-    request = GatewayRequest()
-    request.Set(GatewayRequest.MERCHANT_ID, merchant_id)
-    request.Set(GatewayRequest.MERCHANT_PASSWORD, merchant_password)
+    # Cancel Rebill
+    if service.PerformRebillCancel(request, response):
+        print("2. Cancel Successful")
 
-    request.Set(GatewayRequest.MERCHANT_CUSTOMER_ID, cust_id)
-    request.Set(GatewayRequest.MERCHANT_INVOICE_ID, inv_id)
+        # Check Rebill Status
+        status_request = GatewayRequest()
+        status_request.Set(GatewayRequest.MERCHANT_ID, "1")
+        status_request.Set(GatewayRequest.MERCHANT_PASSWORD, "testpassword")
+        status_request.Set(GatewayRequest.MERCHANT_CUSTOMER_ID, cust_id)
+        status_request.Set(GatewayRequest.MERCHANT_INVOICE_ID, inv_id)
 
-    request.Set(GatewayRequest.REBILL_AMOUNT, "19.95")
-    request.Set(GatewayRequest.REBILL_FREQUENCY, "MONTHLY")
-    request.Set(GatewayRequest.REBILL_END_DATE, "CLEAR")
-
-    if service.PerformRebillUpdate(request, response):
-        print("2. Update to Recurring succeeded")
-        print("  GUID:", response.Get(GatewayResponse.TRANSACT_ID))
-        print("  Rebill Date:", response.Get(GatewayResponse.REBILL_DATE))
-        print("  Cancel Date:", response.Get(GatewayResponse.REBILL_END_DATE))
+        if service.PerformRebillUpdate(status_request, response):
+            if response.Get(GatewayResponse.REBILL_END_DATE) is None:
+                print("3. User is Active and Set to Rebill")
+                print("  Rebill Date:", response.Get(GatewayResponse.REBILL_DATE))
+            else:
+                print("3. User is Active and Set to Cancel")
+                print("  Cancel Date:", response.Get(GatewayResponse.REBILL_END_DATE))
+        else:
+            if response.Get(GatewayResponse.REASON_CODE) == 448:
+                print("3. Subscription Canceled")
+            elif response.Get(GatewayResponse.REASON_CODE) == 441:
+                print("3. Subscription Not Found")
+            else:
+                print("3. Status Check Failed")
+            print("  Reason Code:", response.Get(GatewayResponse.REASON_CODE))
     else:
-        print("2. Update to Recurring failed")
-        print("  Response Code:", response.Get(GatewayResponse.RESPONSE_CODE))
-        print("  Cancel Date:", response.Get(GatewayResponse.REBILL_END_DATE))
-
+        print("2. Cancel failed")
 else:
-    print("1. Non-recurring join failed")
-    print("GUID:", response.Get(GatewayResponse.TRANSACT_ID))
-    print("Response Code:", response.Get(GatewayResponse.RESPONSE_CODE))
-    print("Reason Code:", response.Get(GatewayResponse.REASON_CODE))
-    print("Exception:", response.Get(GatewayResponse.EXCEPTION))
+    print("1. Purchase failed")
+    print("  Response Code:", response.Get(GatewayResponse.RESPONSE_CODE))
+    print("  Reason Code:", response.Get(GatewayResponse.REASON_CODE))
+    print("  Exception:", response.Get(GatewayResponse.EXCEPTION))

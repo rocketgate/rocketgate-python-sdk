@@ -1,3 +1,5 @@
+#! /usr/bin/env python
+
 """
 Copyright notice:
 (c) Copyright 2024 RocketGate
@@ -21,11 +23,11 @@ including, without limitation, damages resulting from loss of use, data or profi
 whether or not advised of the possibility of damage, regardless of the theory of liability.
 """
 
+from RocketGate import *
+
 """
 Reactivate canceled subscription example.
 """
-
-from RocketGate import *
 
 # Reactivate canceled subscription example
 # MERCHANT_CUSTOMER_ID and MERCHANT_INVOICE_ID associated with the subscription

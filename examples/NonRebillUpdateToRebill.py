@@ -1,6 +1,8 @@
+#! /usr/bin/env python
+
 """
 Copyright notice:
-(c) Copyright 2018 RocketGate
+(c) Copyright 2024 RocketGate
 All rights reserved.
 
 The copyright notice must not be removed without specific, prior
@@ -21,87 +23,93 @@ including, without limitation, damages resulting from loss of use, data or profi
 whether or not advised of the possibility of damage, regardless of the theory of liability.
 """
 
-"""
-Example Scenario:
- $9.99 USD purchase.
- Subsequently, the user wants to make another $8.99 purchase using the card on file (PayInfo Token)
-"""
-
 import time
 from RocketGate import *
 
-# Generate the required variables for the test
-time = int(time.time())
-cust_id = f"{time}.PythonTest"
-inv_id = f"{time}.PayInfoTest"
+"""
+Example $29.99 USD non-recurring purchase
+Subsequently, modify to a USD $19.95 monthly.. effective on it's next rebill date.
+"""
+
+# Setup required and testing variables
+time_now = int(time.time())
+cust_id = f"{time_now}.PythonTest"
+inv_id = f"{time_now}.UpgrdToRebillTest"
 merchant_id = "1"
 merchant_password = "testpassword"
 
-# Initialize the objects required for the test
+# Allocate the objects needed for the test
 request = GatewayRequest()
 response = GatewayResponse()
 service = GatewayService()
 
-# Set up the Purchase request
+# Setup the Purchase request
 request.Set(GatewayRequest.MERCHANT_ID, merchant_id)
 request.Set(GatewayRequest.MERCHANT_PASSWORD, merchant_password)
+
+# Customer and invoice ID setup
 request.Set(GatewayRequest.MERCHANT_CUSTOMER_ID, cust_id)
 request.Set(GatewayRequest.MERCHANT_INVOICE_ID, inv_id)
-request.Set(GatewayRequest.CURRENCY, "USD")
-request.Set(GatewayRequest.AMOUNT, "9.99")
 
-# Card details
+# Non-recurring purchase details
+request.Set(GatewayRequest.CURRENCY, "USD")
+request.Set(GatewayRequest.AMOUNT, "29.99")
+request.Set(GatewayRequest.REBILL_FREQUENCY, "MONTHLY")
+request.Set(GatewayRequest.REBILL_COUNT, "0")
+
 request.Set(GatewayRequest.CARDNO, "4111111111111111")
 request.Set(GatewayRequest.EXPIRE_MONTH, "02")
 request.Set(GatewayRequest.EXPIRE_YEAR, "2030")
 request.Set(GatewayRequest.CVV2, "999")
 
-# Customer details
 request.Set(GatewayRequest.CUSTOMER_FIRSTNAME, "Joe")
 request.Set(GatewayRequest.CUSTOMER_LASTNAME, "PythonTester")
-request.Set(GatewayRequest.EMAIL, "pythontester@fakedomain.com")
+request.Set(GatewayRequest.EMAIL, "pythontest@fakedomain.com")
 
-# Billing address
 request.Set(GatewayRequest.BILLING_ADDRESS, "123 Main St")
 request.Set(GatewayRequest.BILLING_CITY, "Las Vegas")
 request.Set(GatewayRequest.BILLING_STATE, "NV")
 request.Set(GatewayRequest.BILLING_ZIPCODE, "89141")
 request.Set(GatewayRequest.BILLING_COUNTRY, "US")
 
-# Risk/Scrub settings
+# Risk/Scrub Request Setting
 request.Set(GatewayRequest.SCRUB, "IGNORE")
 request.Set(GatewayRequest.CVV2_CHECK, "IGNORE")
 request.Set(GatewayRequest.AVS_CHECK, "IGNORE")
 
-# Test mode setup
+# Setup test parameters in the service and request
 service.SetTestMode(True)
 
 # Perform the Purchase transaction
 if service.PerformPurchase(request, response):
-    print("Initial Purchase succeeded")
-    print("GUID:", response.Get(GatewayResponse.TRANSACT_ID))
+    print("1. Non-recurring join succeeded")
+    print("  GUID:", response.Get(GatewayResponse.TRANSACT_ID))
 
-    # Get the PayInfo Token for the next transaction
-    payinfo_transact_id = response.Get(GatewayResponse.TRANSACT_ID)
+    # Upgrade Membership
+    request = GatewayRequest()
+    request.Set(GatewayRequest.MERCHANT_ID, merchant_id)
+    request.Set(GatewayRequest.MERCHANT_PASSWORD, merchant_password)
 
-    # Run an additional purchase using the PayInfo Token
-    secondary_request = GatewayRequest()
-    secondary_request.Set(GatewayRequest.MERCHANT_ID, merchant_id)
-    secondary_request.Set(GatewayRequest.MERCHANT_PASSWORD, merchant_password)
-    secondary_request.Set(GatewayRequest.MERCHANT_CUSTOMER_ID, cust_id)
-    secondary_request.Set(GatewayRequest.PAYINFO_TRANSACT_ID, payinfo_transact_id)
-    secondary_request.Set(GatewayRequest.MERCHANT_INVOICE_ID, inv_id)
-    secondary_request.Set(GatewayRequest.AMOUNT, "8.99")
-    
-    if service.PerformPurchase(secondary_request, response):
-        print("PayInfo Purchase succeeded")
-        print("GUID:", response.Get(GatewayResponse.TRANSACT_ID))
+    request.Set(GatewayRequest.MERCHANT_CUSTOMER_ID, cust_id)
+    request.Set(GatewayRequest.MERCHANT_INVOICE_ID, inv_id)
+
+    request.Set(GatewayRequest.REBILL_AMOUNT, "19.95")
+    request.Set(GatewayRequest.REBILL_FREQUENCY, "MONTHLY")
+    request.Set(GatewayRequest.REBILL_END_DATE, "CLEAR")
+
+    if service.PerformRebillUpdate(request, response):
+        print("2. Update to Recurring succeeded")
+        print("  GUID:", response.Get(GatewayResponse.TRANSACT_ID))
+        print("  Rebill Date:", response.Get(GatewayResponse.REBILL_DATE))
+        print("  Cancel Date:", response.Get(GatewayResponse.REBILL_END_DATE))
     else:
-        print("PayInfo Purchase failed")
+        print("2. Update to Recurring failed")
+        print("  Response Code:", response.Get(GatewayResponse.RESPONSE_CODE))
+        print("  Cancel Date:", response.Get(GatewayResponse.REBILL_END_DATE))
+
 else:
-    print("Initial Purchase failed")
+    print("1. Non-recurring join failed")
     print("GUID:", response.Get(GatewayResponse.TRANSACT_ID))
     print("Response Code:", response.Get(GatewayResponse.RESPONSE_CODE))
     print("Reason Code:", response.Get(GatewayResponse.REASON_CODE))
     print("Exception:", response.Get(GatewayResponse.EXCEPTION))
-    print("Scrub:", response.Get(GatewayResponse.SCRUB_RESULTS))

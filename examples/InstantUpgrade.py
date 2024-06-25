@@ -1,6 +1,8 @@
+#! /usr/bin/env python
+
 """
 Copyright notice:
-(c) Copyright 2018 RocketGate
+(c) Copyright 2024 RocketGate
 All rights reserved.
 
 The copyright notice must not be removed without specific, prior
@@ -21,25 +23,27 @@ including, without limitation, damages resulting from loss of use, data or profi
 whether or not advised of the possibility of damage, regardless of the theory of liability.
 """
 
-"""
-Example Scenario:
-$9.99 USD purchase.
-Subsequently, the user wants to make another $8.99 purchase using the card on file (CardHash)
-"""
-
 import time
 from RocketGate import *
 
-current_time = int(time.time())
-cust_id = f"{current_time}.PythonTest"
-inv_id = f"{current_time}.CardHashTest"
+"""
+Example Scenario:
+$1.99 3-day trial which renews to $9.99/month subscription.
+After 1 day the user wants to upgrade immediately to the full $9.99 subscription
 
+The example code below will upgrade the membership immediately,
+stop the trial period, bill the user $9.99,
+and set the monthly rebill cycle starting today.
+"""
+
+# Setup required and testing variables
+time_now = int(time.time())
+cust_id = f"{time_now}.PythonTest"
+inv_id = f"{time_now}.InstUpgrdTest"
 merchant_id = "1"
 merchant_password = "testpassword"
-merchant_id_1c = "1256059862"
-merchant_password_1c = "LLSgMD8tSkVkZED3"
 
-# Allocate the objects we need for the test
+# Allocate the objects needed for the test
 request = GatewayRequest()
 response = GatewayResponse()
 service = GatewayService()
@@ -48,27 +52,30 @@ service = GatewayService()
 request.Set(GatewayRequest.MERCHANT_ID, merchant_id)
 request.Set(GatewayRequest.MERCHANT_PASSWORD, merchant_password)
 
-# Setting the order id and customer as the unix timestamp as a convenient sequencing value
-# Prepended a test name to the order id to facilitate some clarity when reviewing the tests
+# Customer and invoice ID setup
 request.Set(GatewayRequest.MERCHANT_CUSTOMER_ID, cust_id)
 request.Set(GatewayRequest.MERCHANT_INVOICE_ID, inv_id)
 
-# Example join on Site 1
-request.Set(GatewayRequest.MERCHANT_SITE_ID, 1)
-
-# $9.99/month subscription
+# $9.99/month subscription with trial period
 request.Set(GatewayRequest.CURRENCY, "USD")
-request.Set(GatewayRequest.AMOUNT, 9.99)  # bill 9.99
+request.Set(GatewayRequest.AMOUNT, "1.99")
+request.Set(GatewayRequest.REBILL_START, "3")
+request.Set(GatewayRequest.REBILL_FREQUENCY, "MONTHLY")
+request.Set(GatewayRequest.REBILL_AMOUNT, "9.99")
 
+# Card details
 request.Set(GatewayRequest.CARDNO, "4111111111111111")
-request.Set(GatewayRequest.EXPIRE_MONTH, "12")
+request.Set(GatewayRequest.EXPIRE_MONTH, "02")
 request.Set(GatewayRequest.EXPIRE_YEAR, "2030")
 request.Set(GatewayRequest.CVV2, "999")
 
+# Customer information
 request.Set(GatewayRequest.CUSTOMER_FIRSTNAME, "Joe")
 request.Set(GatewayRequest.CUSTOMER_LASTNAME, "PythonTester")
-request.Set(GatewayRequest.EMAIL, "pythontester@fakedomain.com")
+request.Set(GatewayRequest.EMAIL, "pythontest@fakedomain.com")
+request.Set(GatewayRequest.IPADDRESS, "127.0.0.1")
 
+# Billing details
 request.Set(GatewayRequest.BILLING_ADDRESS, "123 Main St")
 request.Set(GatewayRequest.BILLING_CITY, "Las Vegas")
 request.Set(GatewayRequest.BILLING_STATE, "NV")
@@ -86,36 +93,33 @@ service.SetTestMode(True)
 # Perform the Purchase transaction
 if service.PerformPurchase(request, response):
     print("Purchase succeeded")
+    print("Response Code:", response.Get(GatewayResponse.RESPONSE_CODE))
+    print("Reason Code:", response.Get(GatewayResponse.REASON_CODE))
+    print("Auth No:", response.Get(GatewayResponse.AUTH_NO))
+    print("AVS:", response.Get(GatewayResponse.AVS_RESPONSE))
+    print("CVV2:", response.Get(GatewayResponse.CVV2_CODE))
     print("GUID:", response.Get(GatewayResponse.TRANSACT_ID))
+    print("Account:", response.Get(GatewayResponse.MERCHANT_ACCOUNT))
+    print("Scrub:", response.Get(GatewayResponse.SCRUB_RESULTS))
 
-    # Get the CardHash so we can run the next transaction without needing to store the credit card #
-    card_hash = response.Get(GatewayResponse.CARD_HASH)
-
-    # Run additional purchase using card_hash
-    # This would normally be two separate processes,
-    # but for example's sake is in one process (thus we clear and set a new GatewayRequest object)
-    # The key values required are MERCHANT_CUSTOMER_ID and MERCHANT_INVOICE_ID AND CARD_HASH.
+    # Upgrade Membership
     request = GatewayRequest()
-    request.Set(GatewayRequest.MERCHANT_ID, merchant_id_1c)
-    request.Set(GatewayRequest.MERCHANT_PASSWORD, merchant_password_1c)
+    request.Set(GatewayRequest.MERCHANT_ID, merchant_id)
+    request.Set(GatewayRequest.MERCHANT_PASSWORD, merchant_password)
+    request.Set(GatewayRequest.IPADDRESS, "127.0.0.1")
 
-    request.Set(GatewayRequest.REFERRING_MERCHANT_ID, merchant_id)
-    request.Set(GatewayRequest.REFERRED_CUSTOMER_ID, cust_id)
-    request.Set(GatewayRequest.CARD_HASH, card_hash)
+    request.Set(GatewayRequest.MERCHANT_CUSTOMER_ID, cust_id)
+    request.Set(GatewayRequest.MERCHANT_INVOICE_ID, inv_id)
 
-    request.Set(GatewayRequest.MERCHANT_CUSTOMER_ID, f"{cust_id}1CTEST")
-    request.Set(GatewayRequest.MERCHANT_INVOICE_ID, f"{inv_id}1CTEST")
+    request.Set(GatewayRequest.AMOUNT, "9.99")
+    request.Set(GatewayRequest.REBILL_START, "AUTO")
 
-    # Example 1-click on Site 2
-    request.Set(GatewayRequest.MERCHANT_SITE_ID, 2)
-
-    request.Set(GatewayRequest.AMOUNT, 14.99)
-    request.Set(GatewayRequest.REBILL_FREQUENCY, "MONTHLY")
-
-    if service.PerformPurchase(request, response):
-        print("1Click Purchase succeeded")
+    if service.PerformRebillUpdate(request, response):
+        print("Upgrade succeeded")
     else:
-        print("1Click Purchase failed")
+        print("Upgrade failed")
+        print("Response Code:", response.Get(GatewayResponse.RESPONSE_CODE))
+        print("Reason Code:", response.Get(GatewayResponse.REASON_CODE))
 else:
     print("Purchase failed")
     print("GUID:", response.Get(GatewayResponse.TRANSACT_ID))
