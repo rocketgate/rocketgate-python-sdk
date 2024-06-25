@@ -31,19 +31,19 @@ from urllib.parse import urlsplit
 
 
 class GatewayRequest:
-
-    VERSION_NUMBER = "PY3.6"
     VERSION_INDICATOR = "version"
+    VERSION_NUMBER = "PY3.6"
 
     ######################################################################
     #
     #	Define constant hash values.
     #
     ######################################################################
-    #
 
+    ACCOUNT_HOLDER = "accountHolder"
     ACCOUNT_NO = "accountNo"
     AFFILIATE = "affiliate"
+    ALLOW_CARD_DEBIT_CREDIT = "ALLOW_CARD_DEBIT_CREDIT"
     AMOUNT = "amount"
     AVS_CHECK = "avsCheck"
     BILLING_ADDRESS = "billingAddress"
@@ -84,6 +84,7 @@ class GatewayRequest:
     FAILURE_URL = "FAILUREURL"
     GATEWAY_CONNECT_TIMEOUT = "gatewayConnectTimeout"
     GATEWAY_PORTNO = "gatewayPortNo"
+    GATEWAY_PROTOCOL = "gatewayProtocol"
     GATEWAY_READ_TIMEOUT = "gatewayReadTimeout"
     GATEWAY_SERVER = "gatewayServer"
     GATEWAY_SERVLET = "gatewayServlet"
@@ -93,21 +94,23 @@ class GatewayRequest:
     IOVATION_BLACK_BOX = "iovationBlackBox"
     IOVATION_RULE = "iovationRule"
     IPADDRESS = "ipAddress"
+    LANGUAGE = "LANGUAGE"
     MERCHANT_ACCOUNT = "merchantAccount"
+    MERCHANT_CASCADED_AUTH = "MERCHANTCASCADEDAUTH"
     MERCHANT_CUSTOMER_ID = "merchantCustomerID"
     MERCHANT_DESCRIPTOR = "merchantDescriptor"
     MERCHANT_DESCRIPTOR_CITY = "merchantDescriptorCity"
-    MERCHANT_DESCRIPTOR_TRIAL = "merchantDescriptorTrial"
     MERCHANT_ID = "merchantID"
     MERCHANT_INVOICE_ID = "merchantInvoiceID"
     MERCHANT_PASSWORD = "merchantPassword"
     MERCHANT_PRODUCT_ID = "merchantProductID"
     MERCHANT_SITE_ID = "merchantSiteID"
     OMIT_RECEIPT = "omitReceipt"
+    ONCLICK_LOGO_URL = "onClickLogoURL"
+    PARES = "PARES"
     PARTIAL_AUTH_FLAG = "partialAuthFlag"
     PAYINFO_TRANSACT_ID = "payInfoTransactID"
     PAYMENT_LINK_TOKEN = "PAYMENTLINKTOKEN"
-    PAYMENT_LINK_URL = "PAYMENT_LINK_URL"
     PREFERRED_MERCHANT_ACCOUNT = "preferredMerchantAccount"
     PROCESSOR_3DS = "PROCESSOR3DS"
     REBILL_AMOUNT = "rebillAmount"
@@ -120,32 +123,78 @@ class GatewayRequest:
     REBILL_START = "rebillStart"
     REBILL_SUSPEND = "rebillSuspend"
     REFERENCE_GUID = "referenceGUID"
-    REFERENCE_SCHEME_SETTLEMENT_DATE = "SCHEMESETTLEDATE"
-    REFERENCE_SCHEME_TRANSACTION_ID = "SCHEMETRANID"
+    REFERENCE_SCHEME_SETTLEMENT_DATE = "schemeSettleDate"
+    REFERENCE_SCHEME_TRANSACTION_ID = "schemeTranId"
+    REFERRAL_NO = "referralNo"
+    REFERRED_CUSTOMER_ID = "referredCustomerID"
     REFERRER_URL = "referrerURL"
+    REFERRING_MERCHANT_ID = "referringMerchantID"
     ROUTING_NO = "routingNo"
-    SAVINGS_ACCOUNT = "SAVINGSACCOUNT"
+    SAVINGS_ACCOUNT = "savingsAccount"
     SCRUB = "scrub"
     SCRUB_ACTIVITY = "scrubActivity"
     SCRUB_NEGDB = "scrubNegDB"
     SCRUB_PROFILE = "scrubProfile"
     SHOW_PAYMENT_FORM = "SHOW_PAYMENT_FORM"
-    SS_NUMBER = "SSNUMBER"
+    SS_NUMBER = "ssNumber"
     STYLE_SHEET = "style"
     STYLE_SHEET2 = "style2"
     STYLE_SHEET3 = "style3"
     SUB_MERCHANT_ID = "subMerchantID"
     SUCCESS_URL = "SUCCESSURL"
+    THREATMETRIX_SESSION_ID = "threatMetrixSessionID"
     TRANSACTION_TYPE = "transactionType"
     TRANSACT_ID = REFERENCE_GUID
     TRANSLATIONS = "translations"
     UDF01 = "udf01"
     UDF02 = "udf02"
     USERNAME = "username"
+    USE_3D_SECURE = "use3DSecure"
     USE_PRIMARY_SCHEMEID = "usePrimarySchemeID"
     XSELL_CUSTOMER_ID = "xsellCustomerID"
+    XSELL_MERCHANT_ACCOUNT = "xsellMerchantAccount"
     XSELL_MERCHANT_ID = "xsellMerchantID"
     XSELL_REFERENCE_XACT = "xsellReferenceXact"
+    _3DSECURE_ACS_TRANSACTION_ID = "_3DSECURE_ACS_TRANSACTION_ID"
+    _3DSECURE_ACS_WINDOW_SIZE = "_3DSECURE_ACS_WINDOW_SIZE"
+    """
+    An override field that a merchant can pass in to set the challenge window size to display to the end cardholder.
+    
+    The ACS will reply with content that is formatted appropriately to this window size to allow for the best user 
+    experience.
+    
+    The sizes are width x height in pixels of the window displayed in the cardholder browser window.
+    
+    The possible values are:
+    
+    - 01 (250x400)
+    - 02 (390x400)
+    - 03 (500x600)
+    - 04 (600x400)
+    - 05 (Full page)
+    """
+    _3DSECURE_CHALLENGE_MANDATED_INDICATOR = "_3DSECURE_CHALLENGE_MANDATED_INDICATOR"
+    _3DSECURE_DF_REFERENCE_ID = "_3DSECURE_DF_REFERENCE_ID"
+    _3DSECURE_DS_TRANSACTION_ID = "_3DSECURE_DS_TRANSACTION_ID"
+    _3DSECURE_LOOKUP_CHALLENGE_INDICATOR = "_3DSECURE_LOOKUP_CHALLENGE_INDICATOR"
+    """
+    Whether or not to request a challenge step-up flow from the ACS 
+    
+    - 01 - No preference
+    - 02 - No challenge requested
+    - 03 - Challenge requested (3DS Requestor Preference)
+    - 04 - Challenge requested (Mandate)
+    """
+    _3DSECURE_REDIRECT_URL = "_3DSECURE_REDIRECT_URL"
+    _3DSECURE_THREE_DS_SERVER_TRANSACTION_ID = "_3DSECURE_THREE_DS_SERVER_TRANSACTION_ID"
+    _3D_CAVV_ALGORITHM = "THREEDCAVVALGORITHM"
+    _3D_CAVV_UCAF = "ThreeDCavvUcaf"
+    _3D_CHECK = "ThreeDCheck"
+    _3D_ECI = "ThreeDECI"
+    _3D_PARESSTATUS = "THREEDPARESSTATUS"
+    _3D_VERSION = "THREEDVERSION"
+    _3D_VERSTATUS = "THREEDVERSTATUS"
+    _3D_XID = "ThreeDXID"
 
     def __init__(self):
         """Constructor for class."""
@@ -215,12 +264,16 @@ class GatewayRequest:
 
 
 class GatewayResponse(xml.sax.handler.ContentHandler):
+
+    VERSION_INDICATOR = "version"
+
     ######################################################################
     #
     #	Define constant hash values.
     #
     ######################################################################
 
+    ACS_URL = "acsURL"
     AUTH_NO = "authNo"
     AVS_RESPONSE = "avsResponse"
     BALANCE_AMOUNT = "balanceAmount"
@@ -243,6 +296,7 @@ class GatewayResponse(xml.sax.handler.ContentHandler):
     CARD_LAST_FOUR = "cardLastFour"
     CARD_REGION = "cardRegion"
     CARD_TYPE = "cardType"
+    CAVV_RESPONSE = "cavvResponse"
     CUSTOMER_FIRSTNAME = "customerFirstName"
     CUSTOMER_LASTNAME = "customerLastName"
     CVV2_CODE = "cvv2Code"
@@ -257,7 +311,6 @@ class GatewayResponse(xml.sax.handler.ContentHandler):
     IOVATION_RULE_TYPE_ = "IOVATIONRULETYPE_"
     IOVATION_SCORE = "IOVATIONSCORE"
     IOVATION_TRACKING_NO = "IOVATIONTRACKINGNO"
-    IS_BANK_HARD_DECLINE = "isBankHardDecline"
     JOIN_AMOUNT = "joinAmount"
     JOIN_DATE = "joinDate"
     LAST_BILLING_AMOUNT = "lastBillingAmount"
@@ -269,14 +322,12 @@ class GatewayResponse(xml.sax.handler.ContentHandler):
     MERCHANT_INVOICE_ID = "merchantInvoiceID"
     MERCHANT_PRODUCT_ID = "merchantProductID"
     MERCHANT_SITE_ID = "merchantSiteID"
+    PAREQ = "PAREQ"
+    PARES = "PARES"
     PAYMENT_LINK_URL = "PAYMENT_LINK_URL"
-    PAY_HASH = CARD_HASH
-    PAY_LAST_FOUR = CARD_LAST_FOUR
-    PAY_TYPE = "payType"
     PROCESSOR_3DS = "PROCESSOR3DS"
     REASON_CODE = "reasonCode"
     REBILL_AMOUNT = "rebillAmount"
-    REBILL_CURRENCY = "rebillCurrency"
     REBILL_DATE = "rebillDate"
     REBILL_END_DATE = "rebillEndDate"
     REBILL_FREQUENCY = "rebillFrequency"
@@ -291,6 +342,23 @@ class GatewayResponse(xml.sax.handler.ContentHandler):
     SETTLED_CURRENCY = "approvedCurrency"
     TRANSACTION_TIME = "transactionTime"
     TRANSACT_ID = "guidNo"
+    _3DSECURE_ACS_TRANSACTION_ID = "_3DSECURE_ACS_TRANSACTION_ID"
+    _3DSECURE_CAVV_ALGORITHM = "_3DSECURE_CAVV_ALGORITHM"
+    _3DSECURE_CAVV_UCAF = "_3DSECURE_CAVV_UCAF"
+    _3DSECURE_CHALLENGE_MANDATED_INDICATOR = "_3DSECURE_CHALLENGE_MANDATED_INDICATOR"
+    _3DSECURE_DEVICE_COLLECTION_JWT = "_3DSECURE_DEVICE_COLLECTION_JWT"
+    _3DSECURE_DEVICE_COLLECTION_URL = "_3DSECURE_DEVICE_COLLECTION_URL"
+    _3DSECURE_DS_TRANSACTION_ID = "_3DSECURE_DS_TRANSACTION_ID"
+    _3DSECURE_LOOKUP_CHALLENGE_INDICATOR = "_3DSECURE_LOOKUP_CHALLENGE_INDICATOR"
+    _3DSECURE_LOOKUP_REFERENCE_GUID = "_3DSECURE_LOOKUP_REFERENCE_GUID"
+    _3DSECURE_LOOKUP_SIGNATURE = "_3DSECURE_LOOKUP_SIGNATURE"
+    _3DSECURE_PARESSTATUS = "_3DSECURE_PARESSTATUS"
+    _3DSECURE_STEP_UP_JWT = "_3DSECURE_STEP_UP_JWT"
+    _3DSECURE_STEP_UP_URL = "_3DSECURE_STEP_UP_URL"
+    _3DSECURE_THREE_DS_SERVER_TRANSACTION_ID = "_3DSECURE_THREE_DS_SERVER_TRANSACTION_ID"
+    _3DSECURE_VERSION = "_3DSECURE_VERSION"
+    _3DSECURE_VERSTATUS = "_3DSECURE_VERSTATUS"
+    _3DSECURE_XID = "_3DSECURE_XID"
 
     def __init__(self):
         """Constructor for class."""
@@ -335,22 +403,18 @@ class GatewayResponse(xml.sax.handler.ContentHandler):
             xml.sax.parseString(xmlDocument, self)
 
         #
-        #	If there was a parsing error, set the error codes
-        #	and quit.
+        #	If there was a parsing error, set the error codes and quit.
         #
         except xml.sax.SAXException as ex:
-            self.Set(GatewayResponse.EXCEPTION, ex.getMessage() + \
-                     ": " + xmlDocument)
+            self.Set(GatewayResponse.EXCEPTION, ex.getMessage() + ": " + xmlDocument)
             self.Set(GatewayResponse.RESPONSE_CODE, 3)
             self.Set(GatewayResponse.REASON_CODE, 400)
 
         #
-        #	If there was some other type of exception, set the
-        #	error codes and quit.
+        #	If there was some other type of exception, set the error codes and quit.
         #
         except:
-            self.Set(GatewayResponse.EXCEPTION, "Unhandled exception: " + \
-                     xmlDocument)
+            self.Set(GatewayResponse.EXCEPTION, "Unhandled exception: " + xmlDocument)
             self.Set(GatewayResponse.RESPONSE_CODE, 3)
             self.Set(GatewayResponse.REASON_CODE, 307)
 
@@ -390,6 +454,7 @@ class GatewayService:
     LIVE_HOST = "gateway.rocketgate.com"
     LIVE_HOST_16 = "gateway-16.rocketgate.com"
     LIVE_HOST_17 = "gateway-17.rocketgate.com"
+
     TEST_HOST = "dev-gateway.rocketgate.com"
 
     def __init__(self):
@@ -468,17 +533,17 @@ class GatewayService:
         #
         #	Determine the final servlet name.
         #
-        if urlServlet == None:  # None specified?
+        if urlServlet is None:  # None specified?
             urlServlet = self.rocketGateServlet
 
         #
         #	Determine the final port number.
         #
-        if urlPortNo == None:
+        if urlPortNo is None:
             urlPortNo = self.rocketGatePortNo
         else:
             try:
-                value = int(urlPortNo)  # Make sure this is numeric
+                int(urlPortNo)  # Make sure this is numeric
             except:
                 urlPortNo = self.rocketGatePortNo
 
@@ -486,11 +551,11 @@ class GatewayService:
         #	Get the connection timeout.
         #
         connectTimeout = request.Get("gatewayConnectTimeout")
-        if connectTimeout == None:
+        if connectTimeout is None:
             connectTimeout = self.rocketGateConnectTimeout
         else:
             try:
-                value = int(connectTimeout)  # Make sure this is numeric
+                int(connectTimeout)  # Make sure this is numeric
             except:
                 connectTimeout = self.rocketGateConnectTimeout
 
@@ -498,11 +563,11 @@ class GatewayService:
         #	Get the read timeout.
         #
         readTimeout = request.Get("gatewayReadTimeout")
-        if readTimeout == None:
+        if readTimeout is None:
             readTimeout = self.rocketGateReadTimeout
         else:
             try:
-                value = int(readTimeout)  # Make sure this is numeric
+                int(readTimeout)  # Make sure this is numeric
             except:
                 readTimeout = self.rocketGateReadTimeout
 
@@ -533,7 +598,7 @@ class GatewayService:
             #	If the response was not '200 OK', we must quit
             #
             if results.status != 200:
-                response.Set(GatewayResponse.EXCEPTION,  str(results.status) + ": " + body)
+                response.Set(GatewayResponse.EXCEPTION, str(results.status) + ": " + body)
                 response.Set(GatewayResponse.RESPONSE_CODE, 3)
                 response.Set(GatewayResponse.REASON_CODE, 304)
                 return 3  # System error
@@ -557,8 +622,7 @@ class GatewayService:
             return 3  # System error
 
         #
-        #	If there was some other type of socket problemm,
-        #	return an error.
+        #	If there was some other type of socket problem, return an error.
         #
         except socket.error as ex:
             response.Set(GatewayResponse.EXCEPTION, str(ex))
@@ -600,7 +664,7 @@ class GatewayService:
         #
         response.SetFromXML(body)  # Set from response body
         responseCode = response.Get(GatewayResponse.RESPONSE_CODE)
-        if responseCode == None:  # Don't have one?
+        if responseCode is None:  # Don't have one?
             responseCode = 3  # System error
             response.Set(GatewayResponse.EXCEPTION, body)
             response.Set(GatewayResponse.RESPONSE_CODE, 3)
@@ -629,8 +693,7 @@ class GatewayService:
                 return 4  # Validation error: Invalid URL
 
         #
-        #	If the request specifies a server name, use it.
-        #	Otherwise, use the default.
+        #	If the request specifies a server name, use it. Otherwise, use the default.
         #
         server_name = request.Get(GatewayRequest.GATEWAY_SERVER)
         if server_name is not None:  # Override?
@@ -670,8 +733,7 @@ class GatewayService:
                 server_list[index] = swapper  # And swap
 
         #
-        #	Loop over the hosts and try to send the transaction
-        #	to each host in the list until it succeeds or fails
+        #	Loop over the hosts and try to send the transaction to each host in the list until it succeeds or fails
         #	due to an unrecoverable error.
         #
         index = 0  # Start at first position
@@ -691,13 +753,12 @@ class GatewayService:
                 return 0  # Must quit
 
             #
-            #	Save any errors in the response so they can be
-            # 	transmitted along with the next request.
+            #	Save any errors in the response so they can be transmitted along with the next request.
             #
             request.Set(GatewayRequest.FAILED_SERVER, server_list[index])
-            request.Set(GatewayRequest.FAILED_RESPONSE_CODE,  response.Get(GatewayResponse.RESPONSE_CODE))
-            request.Set(GatewayRequest.FAILED_REASON_CODE,  response.Get(GatewayResponse.REASON_CODE))
-            request.Set(GatewayRequest.FAILED_GUID,  response.Get(GatewayResponse.TRANSACT_ID))
+            request.Set(GatewayRequest.FAILED_RESPONSE_CODE, response.Get(GatewayResponse.RESPONSE_CODE))
+            request.Set(GatewayRequest.FAILED_REASON_CODE, response.Get(GatewayResponse.REASON_CODE))
+            request.Set(GatewayRequest.FAILED_GUID, response.Get(GatewayResponse.TRANSACT_ID))
             index += 1  # Next index
 
         #
@@ -717,8 +778,7 @@ class GatewayService:
         request.Clear(GatewayRequest.FAILED_GUID)
 
         #
-        #	This transaction must go to the host that processed a
-        #	previous referenced transaction.  Get the GUID of the
+        #	This transaction must go to the host that processed a previous referenced transaction.  Get the GUID of the
         #	reference transaction.
         #
         referenceGUID = request.Get(GatewayRequest.REFERENCE_GUID)
@@ -728,8 +788,7 @@ class GatewayService:
             return 0  # And quit
 
         #
-        #	Strip off the bits that indicate which server should
-        #	be used.
+        #	Strip off the bits that indicate which server should be used.
         #
         if len(referenceGUID) > 15:  # Live servers?
             siteString = referenceGUID[0:2]  # Get first two digits
@@ -747,8 +806,7 @@ class GatewayService:
             return 0  # And quit
 
         #
-        #	Build the hostname to which the transaction should
-        #	be directed.
+        #	Build the hostname to which the transaction should be directed.
         #
         server_name = request.Get("gatewayServer")
         if server_name is None:  # Don't have one?
@@ -772,19 +830,17 @@ class GatewayService:
         """Performs the confirmation pass that tells the server we have received the transaction reply."""
 
         #
-        #	Verify that we have a transaction ID for the
-        #	confirmation message.
+        #	Verify that we have a transaction ID for the confirmation message.
         #
         confirmGUID = response.Get(GatewayResponse.TRANSACT_ID)
-        if confirmGUID == None:  # Don't have reference?
+        if confirmGUID is None:  # Don't have reference?
             response.Set(GatewayResponse.EXCEPTION, "BUG-CHECK - Missing confirmation GUID")
             response.Set(GatewayResponse.RESPONSE_CODE, 3)
             response.Set(GatewayResponse.REASON_CODE, 307)
             return 0  # And quit
 
         #
-        #	Add the GUID to the request and send it back to the
-        #	original server for confirmation.
+        #	Add the GUID to the request and send it back to the original server for confirmation.
         #
         confirmResponse = GatewayResponse()  # Need a new response object
         request.Set(GatewayRequest.TRANSACTION_TYPE, "CC_CONFIRM")
@@ -832,12 +888,11 @@ class GatewayService:
         request.Set(GatewayRequest.TRANSACTION_TYPE, "CC_CREDIT")
 
         #
-        #	If this is a reference GUID, send the transaction to
-        #	the appropriate server.  Otherwise use the normal
+        #	If this is a reference GUID, send the transaction to the appropriate server.  Otherwise use the normal
         #	transaction distribution.
         #
         referenceGUID = request.Get(GatewayRequest.REFERENCE_GUID)
-        if referenceGUID != None:  # Have reference?
+        if referenceGUID is not None:  # Have reference?
             results = self.PerformTargetedTransaction(request, response)
         else:
             results = self.PerformTransaction(request, response)
@@ -873,13 +928,12 @@ class GatewayService:
         #	If there is no prorated charge, just perform the update.
         #
         amount = request.Get(GatewayRequest.AMOUNT)
-        if amount == None:  # No charge?
+        if amount is None:  # No charge?
             results = self.PerformTransaction(request, response)
             return results  # Return results
 
         #
-        #	If the amount will not result in a chage, just
-        #	perform the update.
+        #	If the amount will not result in a chage, just perform the update.
         #
         try:  # Check the amount
             value = float(amount)  # Make sure this is valid
@@ -890,8 +944,7 @@ class GatewayService:
             pass
 
         #
-        #	If there is a charge, perform the update and confirm
-        #	the charge.
+        #	If there is a charge, perform the update and confirm the charge.
         #
         results = self.PerformTransaction(request, response)
         if results:  # Success?
@@ -945,6 +998,7 @@ class GatewayService:
 
 
 class GatewayCodes:
+
     # Static response codes
     RESPONSE_SUCCESS = 0  # Function succeeded
     RESPONSE_BANK_FAIL = 1  # Bank decline/failure
@@ -1003,7 +1057,7 @@ class GatewayCodes:
     REASON_3DSECURE_REJECTED = 205
     REASON_RISK_CARD_CATEGORY = 206
     REASON_RISK_AVS_VS_ISSUER = 207
-    REASON_RISK_DUPLICATE_MEMBERSHIP  = 208
+    REASON_RISK_DUPLICATE_MEMBERSHIP = 208
     REASON_RISK_DUPLICATE_CARD = 209
     REASON_RISK_DUPLICATE_EMAIL = 210
     REASON_RISK_EXCEEDED_MAX_PURCHASE = 211
@@ -1096,7 +1150,7 @@ class GatewayCodes:
     REASON_INVALID_REFERRAL_DATA = 437
     REASON_INVALID_SITEID = 438
     REASON_DUPLICATE_INVOICE_ID = 439
-    REASON_EXISTING_MEMBERSHIP  = 440
+    REASON_EXISTING_MEMBERSHIP = 440
     REASON_INVOICE_NOT_FOUND = 441
     REASON_INVALID_BATCH_DURATION = 442
     REASON_MISSING_CUSTOMER_ID = 443

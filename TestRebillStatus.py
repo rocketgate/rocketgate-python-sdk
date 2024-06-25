@@ -26,22 +26,19 @@ whether or not advised of the possibility of damage, regardless of the theory of
 import datetime
 from RocketGate import *
 
-
+# Setup a couple required and testing variables
 the_time = datetime.datetime.now().strftime("%Y%m%d.%H%M%S")
-
-cust_id = the_time + ".PythonTest"
-inv_id = the_time + ".RebillStatusTest"
+cust_id = f"{the_time}.PythonTest"
+inv_id = f"{the_time}.RebillStatusTest"
 merch_id = "1"
 merch_password = "testpassword"
 
+# Allocate the objects we need for the test.
 request = GatewayRequest()
 response = GatewayResponse()
 service = GatewayService()
 
-#
-# Example $9.99 USD monthly subscription purchase.
-# Subsequently, Check the status of the subscription
-#
+# Setup the Purchase request.
 request.Set(GatewayRequest.MERCHANT_ID, merch_id)
 request.Set(GatewayRequest.MERCHANT_PASSWORD, merch_password)
 
@@ -57,56 +54,34 @@ request.Set(GatewayRequest.EXPIRE_MONTH, "02")
 request.Set(GatewayRequest.EXPIRE_YEAR, "2030")
 request.Set(GatewayRequest.CVV2, "999")
 
-request.Set(GatewayRequest.BILLING_ADDRESS, "123 Some Street")
+request.Set(GatewayRequest.CUSTOMER_FIRSTNAME, "Joe")
+request.Set(GatewayRequest.CUSTOMER_LASTNAME, "PHPTester")
+request.Set(GatewayRequest.EMAIL, "phptest@fakedomain.com")
+request.Set(GatewayRequest.IPADDRESS, "68.224.133.117")  # Replace with actual IP address if needed
+
+request.Set(GatewayRequest.BILLING_ADDRESS, "123 Main St")
 request.Set(GatewayRequest.BILLING_CITY, "Las Vegas")
-request.Set(GatewayRequest.BILLING_STATE, "Nevada")
+request.Set(GatewayRequest.BILLING_STATE, "NV")
 request.Set(GatewayRequest.BILLING_ZIPCODE, "89141")
 request.Set(GatewayRequest.BILLING_COUNTRY, "US")
 
-request.Set(GatewayRequest.CUSTOMER_FIRSTNAME, "Monty")
-request.Set(GatewayRequest.CUSTOMER_LASTNAME, "Python")
-request.Set(GatewayRequest.EMAIL, "python_user@rocketgate.com")
-request.Set(GatewayRequest.IPADDRESS, "68.224.133.117")
-
-#
 # Risk/Scrub Request Setting
-#
-request.Set(GatewayRequest.AVS_CHECK, "IGNORE")
-request.Set(GatewayRequest.CVV2_CHECK, "IGNORE")
 request.Set(GatewayRequest.SCRUB, "IGNORE")
+request.Set(GatewayRequest.CVV2_CHECK, "IGNORE")
+request.Set(GatewayRequest.AVS_CHECK, "IGNORE")
 
-#
-#      Setup test parameters in the service.
-#
+# Setup test parameters in the service and request.
 service.SetTestMode(1)
 
-#
-#      Perform the Purchase transaction.
-#
-
+# Perform the Purchase transaction.
 status = service.PerformPurchase(request, response)
 if status:
-    print("Purchase succeeded")
-    print("GUID: ", response.Get(GatewayResponse.TRANSACT_ID))
-    print("Response Code: ", response.Get(GatewayResponse.RESPONSE_CODE))
-    print("Reason Code: ", response.Get(GatewayResponse.REASON_CODE))
-    print("AuthNo: ", response.Get(GatewayResponse.AUTH_NO))
-    print("AVS: ", response.Get(GatewayResponse.AVS_RESPONSE))
-    print("CVV2: ", response.Get(GatewayResponse.CVV2_CODE))
-    print("Card Hash: ", response.Get(GatewayResponse.CARD_HASH))
-    print("Card Region: ", response.Get(GatewayResponse.CARD_REGION))
-    print("Card Description: ", response.Get(GatewayResponse.CARD_DESCRIPTION))
-    print("Account: ", response.Get(GatewayResponse.MERCHANT_ACCOUNT))
-    print("Scrub: ", response.Get(GatewayResponse.SCRUB_RESULTS))
+    print("1. Purchase succeeded")
 
-    """
-    Check Rebill Status
-    
-    This would normally be two separate processes, 
-    but for example's sake is in one process (thus we clear and set a new GatewayRequest object)
-    The key values required are MERCHANT_CUSTOMER_ID and MERCHANT_INVOICE_ID.
-    """
-
+    # CHECK Rebill Status
+    # This would normally be two separate processes,
+    # but for example's sake is in one process (thus we clear and set a new GatewayRequest object)
+    # The key values required are MERCHANT_CUSTOMER_ID and MERCHANT_INVOICE_ID.
     request = GatewayRequest()
     request.Set(GatewayRequest.MERCHANT_ID, merch_id)
     request.Set(GatewayRequest.MERCHANT_PASSWORD, merch_password)
@@ -116,34 +91,32 @@ if status:
 
     status = service.PerformRebillUpdate(request, response)
     if status:
-        print("\nStatus Check succeeded")
+        print("2. User is Active and Set to Rebill")
 
         rebill_end_date = response.Get(GatewayResponse.REBILL_END_DATE)
 
         if rebill_end_date is None:
-            print("User is Active and Set to Rebill")
+            print(" Rebill Date:", response.Get(GatewayResponse.REBILL_DATE))
 
-        elif datetime.datetime.strptime(rebill_end_date, "%Y-%m-%d") > time:
-            print("User is Active and Set to Cancel")
-        
         else:
-            print("User is Canceled")
+            print(" Cancel Date:", rebill_end_date)
 
-        print("Rebill Amount: ", response.Get(GatewayResponse.REBILL_AMOUNT))
-        print("Rebill Date: ", response.Get(GatewayResponse.REBILL_DATE))
-        print("Cancel Date: ", response.Get(GatewayResponse.REBILL_END_DATE))
+        print(" Join Date:", response.Get(GatewayResponse.JOIN_DATE))
+        print(" Join Amount:", response.Get(GatewayResponse.JOIN_AMOUNT))
+
+        print(" Rebill Amount:", response.Get(GatewayResponse.REBILL_AMOUNT))
+        print(" Rebill Frequency:", response.Get(GatewayResponse.REBILL_FREQUENCY))
+        print(" Rebill Status:", response.Get(GatewayResponse.REBILL_STATUS))
+
+        print(" Last Billing Date:", response.Get(GatewayResponse.LAST_BILLING_DATE))
+        print(" Last Billing Amount:", response.Get(GatewayResponse.LAST_BILLING_AMOUNT))
+        print(" Last Reason Code:", response.Get(GatewayResponse.LAST_REASON_CODE))
 
     else:
-        print("\nStatus Check failed")
-        print("Response Code: ", response.Get(GatewayResponse.RESPONSE_CODE))
-        print("Reason Code: ", response.Get(GatewayResponse.REASON_CODE))
+        print("2. User is Canceled")
 
 else:
-    print("Purchase failed\n")
-    print("GUID: ", response.Get(GatewayResponse.TRANSACT_ID))
-    print("Response Code: ", response.Get(GatewayResponse.RESPONSE_CODE))
-    print("Reason Code: ", response.Get(GatewayResponse.REASON_CODE))
-    print("Exception: ", response.Get(GatewayResponse.EXCEPTION))
-    print("Scrub: ", response.Get(GatewayResponse.SCRUB_RESULTS))
-    exit()
-
+    print("1. Purchase failed")
+    print("Response Code:", response.Get(GatewayResponse.RESPONSE_CODE))
+    print("Reason Code:", response.Get(GatewayResponse.REASON_CODE))
+    print("Exception:", response.Get(GatewayResponse.EXCEPTION))
