@@ -90,9 +90,9 @@ if service.PerformPurchase(request, response):
                 print("3. User is Active and Set to Cancel")
                 print("  Cancel Date:", response.Get(GatewayResponse.REBILL_END_DATE))
         else:
-            if response.Get(GatewayResponse.REASON_CODE) == 448:
+            if response.Get(GatewayResponse.REASON_CODE) == "448":
                 print("3. Subscription Canceled")
-            elif response.Get(GatewayResponse.REASON_CODE) == 441:
+            elif response.Get(GatewayResponse.REASON_CODE) == "441":
                 print("3. Subscription Not Found")
             else:
                 print("3. Status Check Failed")

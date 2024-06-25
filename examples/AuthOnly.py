@@ -73,12 +73,12 @@ request.Set(GatewayRequest.CVV2_CHECK, "IGNORE")
 request.Set(GatewayRequest.SCRUB, "IGNORE")
 
 #
-#      Setup test parameters in the service.
+# Setup test parameters in the service.
 #
 service.SetTestMode(1)
 
 #
-#      Perform the Auth-Only transaction.
+# Perform the Auth-Only transaction.
 status = service.PerformAuthOnly(request, response)
 
 if status:

@@ -74,8 +74,7 @@ request.Set(GatewayRequest.AVS_CHECK, "IGNORE")
 service.SetTestMode(1)
 
 # Perform the Purchase transaction.
-status = service.PerformPurchase(request, response)
-if status:
+if service.PerformPurchase(request, response):
     print("1. Purchase succeeded")
 
     # CHECK Rebill Status

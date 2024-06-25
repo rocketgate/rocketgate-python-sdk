@@ -68,8 +68,7 @@ service.SetTestMode(1)
 #      Perform the Purchase transaction.
 #
 
-status = service.PerformCardUpload(request, response)
-if status:
+if service.PerformCardUpload(request, response):
     print("Upload succeeded")
     print("Response Code: ", response.Get(GatewayResponse.RESPONSE_CODE))
     print("Reason Code: ", response.Get(GatewayResponse.REASON_CODE))

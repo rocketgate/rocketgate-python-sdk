@@ -50,7 +50,8 @@ request.Set(GatewayRequest.MERCHANT_INVOICE_ID, inv_id)
 # Set REBILL_REACTIVATE parameter TRUE to reactivate subscription
 request.Set(GatewayRequest.REBILL_REACTIVATE, "TRUE")
 
-""" Optional we can set:
+""" 
+Optionally, we can set:
     - date to cancel subscription
     request.Set(GatewayRequest.REBILL_END_DATE, "2025-12-31")
 

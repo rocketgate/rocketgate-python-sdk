@@ -81,7 +81,7 @@ service.PerformPurchase(request, response)
 response_code = response.Get(GatewayResponse.RESPONSE_CODE)
 reason_code = response.Get(GatewayResponse.REASON_CODE)
 
-if response_code != 2 and reason_code != 225:
+if response_code != "2" and reason_code != "225":
     print("Response Code:", response_code)
     print("Reason Code:", reason_code)
     exit("error: expected response 2 and reason 225")

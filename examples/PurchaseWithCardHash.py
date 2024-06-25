@@ -87,8 +87,7 @@ service.SetTestMode(1)
 #
 #      Perform the Purchase transaction.
 #
-status = service.PerformPurchase(request, response)
-if status:
+if service.PerformPurchase(request, response):
     print("Purchase succeeded")
     print("GUID: ", response.Get(GatewayResponse.TRANSACT_ID))
     print("Reason Code: ", response.Get(GatewayResponse.REASON_CODE))
