@@ -55,8 +55,8 @@ request.Set(GatewayRequest.EXPIRE_YEAR, "2030")
 request.Set(GatewayRequest.CVV2, "999")
 
 request.Set(GatewayRequest.CUSTOMER_FIRSTNAME, "Joe")
-request.Set(GatewayRequest.CUSTOMER_LASTNAME, "PHPTester")
-request.Set(GatewayRequest.EMAIL, "phptest@fakedomain.com")
+request.Set(GatewayRequest.CUSTOMER_LASTNAME, "PythonTester")
+request.Set(GatewayRequest.EMAIL, "pythontest@fakedomain.com")
 request.Set(GatewayRequest.IPADDRESS, "68.224.133.117")  # Replace with actual IP address if needed
 
 request.Set(GatewayRequest.BILLING_ADDRESS, "123 Main St")

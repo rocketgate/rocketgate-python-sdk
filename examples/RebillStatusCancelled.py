@@ -37,7 +37,7 @@ request.Set(GatewayRequest.MERCHANT_PASSWORD, "testpassword")
 
 # Setting the order ID and customer as the Unix timestamp for sequencing
 time = int(time.time())
-cust_id = f"{time}.PHPTest"
+cust_id = f"{time}.PythonTest"
 inv_id = f"{time}.RebillStatusTest"
 
 # $9.99/month subscription details

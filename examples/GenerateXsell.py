@@ -91,6 +91,7 @@ if service.PerformPurchase(request, response):
     # Different invoice id for xsell
     inv_id = f"{time_now + 1}.TestGenerateXsell"
     request.Set(GatewayRequest.MERCHANT_INVOICE_ID, inv_id)
+    request.Set(GatewayRequest.XSELL_REFERENCE_XACT, response.Get(GatewayResponse.TRANSACT_ID))
 
     # Generate CrossSale
     request.Set(GatewayRequest.CURRENCY, "USD")
