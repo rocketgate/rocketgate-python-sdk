@@ -23,6 +23,9 @@ including, without limitation, damages resulting from loss of use, data or profi
 whether or not advised of the possibility of damage, regardless of the theory of liability.
 """
 
+import sys
+import os
+sys.path.insert(0, os.path.abspath(os.path.join(os.path.dirname(__file__), '..')))
 from RocketGate import *
 
 """
@@ -31,8 +34,8 @@ Reactivate canceled subscription example.
 
 # Reactivate canceled subscription example
 # MERCHANT_CUSTOMER_ID and MERCHANT_INVOICE_ID associated with the subscription
-cust_id = '1717521838.PythonTest'
-inv_id = '1717521838.LifeTest'
+cust_id = '1719399363.PythonTest'
+inv_id = '1719399363.LifeTest'
 merchant_id = "1"
 merchant_password = "testpassword"
 

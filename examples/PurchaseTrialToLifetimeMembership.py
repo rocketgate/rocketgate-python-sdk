@@ -24,6 +24,9 @@ whether or not advised of the possibility of damage, regardless of the theory of
 """
 
 import time
+import sys
+import os
+sys.path.insert(0, os.path.abspath(os.path.join(os.path.dirname(__file__), '..')))
 from RocketGate import *
 
 # Allocate the objects needed for the test
@@ -75,6 +78,8 @@ if service.PerformPurchase(request, response):
     print("Response Code:", response.Get(GatewayResponse.RESPONSE_CODE))
     print("Reason Code:", response.Get(GatewayResponse.REASON_CODE))
     print("GUID:", response.Get(GatewayResponse.TRANSACT_ID))
+    print("Customer ID:", request.Get(GatewayRequest.MERCHANT_CUSTOMER_ID))
+    print("Invoice ID:", request.Get(GatewayRequest.MERCHANT_INVOICE_ID))
 
 else:
     print("Purchase failed")

@@ -24,6 +24,9 @@ whether or not advised of the possibility of damage, regardless of the theory of
 """
 
 import datetime
+import sys
+import os
+sys.path.insert(0, os.path.abspath(os.path.join(os.path.dirname(__file__), '..')))
 from RocketGate import *
 
 the_time = datetime.datetime.now().strftime("%Y%m%d.%H%M%S")
@@ -98,6 +101,8 @@ if service.PerformPurchase(request, response):
     print("Card Description: ", response.Get(GatewayResponse.CARD_DESCRIPTION))
     print("Account: ", response.Get(GatewayResponse.MERCHANT_ACCOUNT))
     print("Scrub: ", response.Get(GatewayResponse.SCRUB_RESULTS))
+    print("Scrub: ", inv_id)
+    print("Scrub: ", cust_id)
 
 else:
     print("Purchase failed\n")
