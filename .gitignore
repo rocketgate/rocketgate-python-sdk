@@ -1,2 +1,5 @@
 /.idea
-__pycache__/RocketGate.cpython-37.pyc
+__pycache__
+tests/__pycache__
+tests/.DS_Store
+.DS_Store

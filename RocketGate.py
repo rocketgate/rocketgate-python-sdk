@@ -1006,14 +1006,20 @@ class GatewayService:
 class GatewayCodes:
 
     # Static response codes
-    RESPONSE_SUCCESS = 0  # Function succeeded
-    RESPONSE_BANK_FAIL = 1  # Bank decline/failure
-    RESPONSE_RISK_FAIL = 2  # Risk failure
-    RESPONSE_SYSTEM_ERROR = 3  # Server/recoverable error
-    RESPONSE_REQUEST_ERROR = 4  # Invalid request
+    RESPONSE_SUCCESS = 0
+    '''Function succeeded'''
+    RESPONSE_BANK_FAIL = 1
+    '''Bank decline/failure'''
+    RESPONSE_RISK_FAIL = 2
+    '''Risk failure'''
+    RESPONSE_SYSTEM_ERROR = 3
+    '''Server/recoverable error'''
+    RESPONSE_REQUEST_ERROR = 4
+    '''Invalid request'''
 
     # Static reason codes
-    REASON_SUCCESS = 0  # Function succeeded
+    REASON_SUCCESS = 0
+    '''Function succeeded'''
 
     REASON_NOMATCHING_XACT = 100
     REASON_CANNOT_VOID = 101

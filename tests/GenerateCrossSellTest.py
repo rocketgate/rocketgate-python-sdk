@@ -24,8 +24,8 @@ whether or not advised of the possibility of damage, regardless of the theory of
 """
 
 import unittest
+from BaseTestCase import BaseTestCase
 from RocketGate import GatewayRequest, GatewayResponse
-from BaseTestCase import BaseTestCase  # Assuming you have a BaseTestCase class defined
 import time
 
 
