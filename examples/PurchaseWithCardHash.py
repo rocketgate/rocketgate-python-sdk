@@ -114,8 +114,7 @@ if service.PerformPurchase(request, response):
 
     request.Set(GatewayRequest.AMOUNT, 8.99)
 
-    status = service.PerformPurchase(request, response)
-    if status:
+    if service.PerformPurchase(request, response):
         print("CardHash Purchase succeeded")
         print("GUID: ", response.Get(GatewayResponse.TRANSACT_ID))
     else:

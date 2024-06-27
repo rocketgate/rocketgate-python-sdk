@@ -413,16 +413,16 @@ class GatewayResponse(xml.sax.handler.ContentHandler):
         #
         except xml.sax.SAXException as ex:
             self.Set(GatewayResponse.EXCEPTION, ex.getMessage() + ": " + xmlDocument)
-            self.Set(GatewayResponse.RESPONSE_CODE, 3)
-            self.Set(GatewayResponse.REASON_CODE, 400)
+            self.Set(GatewayResponse.RESPONSE_CODE, GatewayCodes.RESPONSE_REQUEST_ERROR)
+            self.Set(GatewayResponse.REASON_CODE, GatewayCodes.REASON_XML_ERROR)
 
         #
         #	If there was some other type of exception, set the error codes and quit.
         #
         except:
             self.Set(GatewayResponse.EXCEPTION, "Unhandled exception: " + xmlDocument)
-            self.Set(GatewayResponse.RESPONSE_CODE, 3)
-            self.Set(GatewayResponse.REASON_CODE, 307)
+            self.Set(GatewayResponse.RESPONSE_CODE, GatewayCodes.RESPONSE_SYSTEM_ERROR)
+            self.Set(GatewayResponse.REASON_CODE, GatewayCodes.REASON_BUGCHECK)
 
     def startElement(self, name, attrs):
         """Handler for start of XML element."""
@@ -605,58 +605,58 @@ class GatewayService:
             #
             if results.status != 200:
                 response.Set(GatewayResponse.EXCEPTION, str(results.status) + ": " + body)
-                response.Set(GatewayResponse.RESPONSE_CODE, 3)
-                response.Set(GatewayResponse.REASON_CODE, 304)
-                return 3  # System error
+                response.Set(GatewayResponse.RESPONSE_CODE, GatewayCodes.RESPONSE_SYSTEM_ERROR)
+                response.Set(GatewayResponse.REASON_CODE, GatewayCodes.REASON_RESPONSE_READ_ERROR)
+                return GatewayCodes.RESPONSE_SYSTEM_ERROR  # System error
 
         #
         #	If there was a timeout, return an error.
         #
         except socket.timeout as ex:
             response.Set(GatewayResponse.EXCEPTION, str(ex))
-            response.Set(GatewayResponse.RESPONSE_CODE, 3)
-            response.Set(GatewayResponse.REASON_CODE, 301)
-            return 3  # System error
+            response.Set(GatewayResponse.RESPONSE_CODE, GatewayCodes.RESPONSE_SYSTEM_ERROR)
+            response.Set(GatewayResponse.REASON_CODE, GatewayCodes.REASON_UNABLE_TO_CONNECT)
+            return GatewayCodes.RESPONSE_SYSTEM_ERROR  # System error
 
         #
         #	If the read timed out, return an error.
         #
         except ssl.SSLError as ex:
             response.Set(GatewayResponse.EXCEPTION, str(ex))
-            response.Set(GatewayResponse.RESPONSE_CODE, 3)
-            response.Set(GatewayResponse.REASON_CODE, 303)
-            return 3  # System error
+            response.Set(GatewayResponse.RESPONSE_CODE, GatewayCodes.RESPONSE_SYSTEM_ERROR)
+            response.Set(GatewayResponse.REASON_CODE, GatewayCodes.REASON_RESPONSE_READ_TIMEOUT)
+            return GatewayCodes.RESPONSE_SYSTEM_ERROR  # System error
 
         #
         #	If there was some other type of socket problem, return an error.
         #
         except socket.error as ex:
             response.Set(GatewayResponse.EXCEPTION, str(ex))
-            response.Set(GatewayResponse.RESPONSE_CODE, 3)
+            response.Set(GatewayResponse.RESPONSE_CODE, GatewayCodes.RESPONSE_SYSTEM_ERROR)
             exString = str(ex)
             if 'Connection refused' in exString:
-                response.Set(GatewayResponse.REASON_CODE, 301)
+                response.Set(GatewayResponse.REASON_CODE, GatewayCodes.REASON_UNABLE_TO_CONNECT)
             else:
-                response.Set(GatewayResponse.REASON_CODE, 304)
-            return 3  # System error
+                response.Set(GatewayResponse.REASON_CODE, GatewayCodes.REASON_RESPONSE_READ_ERROR)
+            return GatewayCodes.RESPONSE_SYSTEM_ERROR  # System error
 
         #
         #	Catch general exceptions.
         #
         except Exception as ex:
             response.Set(GatewayResponse.EXCEPTION, str(ex))
-            response.Set(GatewayResponse.RESPONSE_CODE, 3)
-            response.Set(GatewayResponse.REASON_CODE, 304)
-            return 3  # System error
+            response.Set(GatewayResponse.RESPONSE_CODE, GatewayCodes.RESPONSE_SYSTEM_ERROR)
+            response.Set(GatewayResponse.REASON_CODE, GatewayCodes.REASON_RESPONSE_READ_ERROR)
+            return GatewayCodes.RESPONSE_SYSTEM_ERROR  # System error
 
         #
         #	Other exceptions must be caught too.
         #
         except:
             response.Set(GatewayResponse.EXCEPTION, "Unhandled POST exception")
-            response.Set(GatewayResponse.RESPONSE_CODE, 3)
-            response.Set(GatewayResponse.REASON_CODE, 304)
-            return 3  # System error
+            response.Set(GatewayResponse.RESPONSE_CODE, GatewayCodes.RESPONSE_SYSTEM_ERROR)
+            response.Set(GatewayResponse.REASON_CODE, GatewayCodes.REASON_RESPONSE_READ_ERROR)
+            return GatewayCodes.RESPONSE_SYSTEM_ERROR  # System error
 
         #
         #	Clean up the connection when we are all done.
@@ -669,13 +669,17 @@ class GatewayService:
         #	Parse the response XML and return the response code.
         #
         response.SetFromXML(body)  # Set from response body
-        responseCode = response.Get(GatewayResponse.RESPONSE_CODE)
-        if responseCode is None:  # Don't have one?
-            responseCode = 3  # System error
-            response.Set(GatewayResponse.EXCEPTION, body)
-            response.Set(GatewayResponse.RESPONSE_CODE, 3)
-            response.Set(GatewayResponse.REASON_CODE, 400)
-        return int(responseCode)  # Give back results
+        try:
+            response.Set(GatewayResponse.RESPONSE_CODE, int(response.Get(GatewayResponse.RESPONSE_CODE)))
+        except:
+            response.Set(GatewayResponse.RESPONSE_CODE, GatewayCodes.RESPONSE_REQUEST_ERROR)
+
+        try:
+            response.Set(GatewayResponse.REASON_CODE, int(response.Get(GatewayResponse.REASON_CODE)))
+        except:
+            response.Set(GatewayResponse.REASON_CODE, GatewayCodes.REASON_XML_ERROR)
+
+        return int(response.Get(GatewayResponse.RESPONSE_CODE))  # Give back results
 
     def PerformTransaction(self, request, response):
         """Performs the transaction described in a gateway request."""
@@ -694,9 +698,9 @@ class GatewayService:
                     request.Set(GatewayRequest.GATEWAY_PORTNO, parsedUrl.port)
             except Exception as ex:
                 response.Set(GatewayResponse.EXCEPTION, str(ex))
-                response.Set(GatewayResponse.RESPONSE_CODE, 4)
-                response.Set(GatewayResponse.REASON_CODE, 401)
-                return 4  # Validation error: Invalid URL
+                response.Set(GatewayResponse.RESPONSE_CODE, GatewayCodes.RESPONSE_REQUEST_ERROR)
+                response.Set(GatewayResponse.REASON_CODE, GatewayCodes.REASON_INVALID_URL)
+                return GatewayCodes.RESPONSE_REQUEST_ERROR  # Validation error: Invalid URL
 
         #
         #	If the request specifies a server name, use it. Otherwise, use the default.
@@ -750,13 +754,13 @@ class GatewayService:
             #	If the transaction was successful, we are done
             #
             if results == 0:  # Success?
-                return 1  # All done
+                return 1  # (TRUE) All done
 
             #
             #	If the transaction is not recoverable, quit.
             #
             if results != 3:  # Unrecoverable?
-                return 0  # Must quit
+                return 0  # (FALSE) Must quit
 
             #
             #	Save any errors in the response so they can be transmitted along with the next request.
@@ -789,8 +793,8 @@ class GatewayService:
         #
         referenceGUID = request.Get(GatewayRequest.REFERENCE_GUID)
         if referenceGUID is None:  # Don't have reference?
-            response.Set(GatewayResponse.RESPONSE_CODE, 4)
-            response.Set(GatewayResponse.REASON_CODE, 410)
+            response.Set(GatewayResponse.RESPONSE_CODE, GatewayCodes.RESPONSE_REQUEST_ERROR)
+            response.Set(GatewayResponse.REASON_CODE, GatewayCodes.REASON_INVALID_REFGUID)
             return 0  # And quit
 
         #
@@ -807,8 +811,8 @@ class GatewayService:
         try:
             siteNo = int(siteString, 16)  # Get site number
         except:  # Parsing error?
-            response.Set(GatewayResponse.RESPONSE_CODE, 4)
-            response.Set(GatewayResponse.REASON_CODE, 410)
+            response.Set(GatewayResponse.RESPONSE_CODE, GatewayCodes.RESPONSE_REQUEST_ERROR)
+            response.Set(GatewayResponse.REASON_CODE, GatewayCodes.REASON_INVALID_REFGUID)
             return 0  # And quit
 
         #
@@ -841,8 +845,8 @@ class GatewayService:
         confirmGUID = response.Get(GatewayResponse.TRANSACT_ID)
         if confirmGUID is None:  # Don't have reference?
             response.Set(GatewayResponse.EXCEPTION, "BUG-CHECK - Missing confirmation GUID")
-            response.Set(GatewayResponse.RESPONSE_CODE, 3)
-            response.Set(GatewayResponse.REASON_CODE, 307)
+            response.Set(GatewayResponse.RESPONSE_CODE, GatewayCodes.RESPONSE_SYSTEM_ERROR)
+            response.Set(GatewayResponse.REASON_CODE, GatewayCodes.REASON_BUGCHECK)
             return 0  # And quit
 
         #

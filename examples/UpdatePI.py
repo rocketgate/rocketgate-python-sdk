@@ -106,8 +106,7 @@ if service.PerformPurchase(request, response):
     request.Set(GatewayRequest.USERNAME, "Pythontest_user_updated")
     request.Set(GatewayRequest.CUSTOMER_PASSWORD, "Pythontest_pass_updated")
 
-    status = service.PerformRebillUpdate(request, response)
-    if status:
+    if service.PerformRebillUpdate(request, response):
         print("\nUpdate PI succeeded")
 
     else:

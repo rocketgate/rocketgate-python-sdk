@@ -26,7 +26,7 @@ whether or not advised of the possibility of damage, regardless of the theory of
 import time
 import unittest
 from BaseTestCase import BaseTestCase
-from RocketGate import GatewayRequest, GatewayResponse
+from RocketGate import GatewayRequest, GatewayResponse, GatewayCodes
 
 
 class ThreeDSecureTwoTest(BaseTestCase):
@@ -70,7 +70,7 @@ class ThreeDSecureTwoTest(BaseTestCase):
 
         self.service.PerformPurchase(self.request, self.response)
         reason_code = self.response.Get(GatewayResponse.REASON_CODE)
-        self.assertTrue((reason_code == "225"), "Perform BIN intelligence")
+        self.assertTrue((int(reason_code) == GatewayCodes.REASON_3DSECURE_INITIATION), "Perform BIN intelligence")
 
         self.request.Set(GatewayRequest._3DSECURE_DF_REFERENCE_ID, "fake")
         self.request.Set(GatewayRequest._3DSECURE_REDIRECT_URL, "fake")
@@ -84,7 +84,7 @@ class ThreeDSecureTwoTest(BaseTestCase):
 
         self.service.PerformPurchase(self.request, self.response)
         reason_code = self.response.Get(GatewayResponse.REASON_CODE)
-        self.assertTrue((reason_code == "202"), "Perform 3D Lookup")
+        self.assertTrue((int(reason_code) == GatewayCodes.REASON_3DSECURE_AUTHENTICATION_REQUIRED), "Perform 3D Lookup")
 
         self.request = GatewayRequest()
         self.request.Set(GatewayRequest.MERCHANT_ID, self.merchant_id)

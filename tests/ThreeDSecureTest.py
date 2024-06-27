@@ -26,7 +26,7 @@ whether or not advised of the possibility of damage, regardless of the theory of
 import unittest
 import time
 from BaseTestCase import BaseTestCase
-from RocketGate import GatewayRequest, GatewayResponse
+from RocketGate import GatewayRequest, GatewayResponse, GatewayCodes
 
 
 class ThreeDSecureTest(BaseTestCase):
@@ -76,7 +76,7 @@ class ThreeDSecureTest(BaseTestCase):
         # Perform the Lookup transaction.
         self.service.PerformPurchase(self.request, self.response)
         reason_code = self.response.Get(GatewayResponse.REASON_CODE)  # reason code 202 is expected
-        self.assertTrue(reason_code == "202", "Perform 3D Lookup")
+        self.assertTrue(int(reason_code) == GatewayCodes.REASON_3DSECURE_AUTHENTICATION_REQUIRED, "Perform 3D Lookup")
 
         # Setup the 2nd request.
         self.request = GatewayRequest()

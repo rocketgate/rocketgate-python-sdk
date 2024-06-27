@@ -86,7 +86,7 @@ if service.PerformPurchase(request, response):
     print(f"GUID: {response.Get(GatewayResponse.TRANSACT_ID)}")
     print(f"Account: {response.Get(GatewayResponse.MERCHANT_ACCOUNT)}")
     print(f"Exception: {response.Get(GatewayResponse.EXCEPTION)}")
-elif response.Get(GatewayResponse.REASON_CODE) == "202":
+elif int(response.Get(GatewayResponse.REASON_CODE)) == GatewayCodes.REASON_3DSECURE_AUTHENTICATION_REQUIRED:
     print("3DS Lookup succeeded")
     print(f"  GUID: {response.Get(GatewayResponse.TRANSACT_ID)}")
     print(f"  Reason Code: {response.Get(GatewayResponse.REASON_CODE)}")

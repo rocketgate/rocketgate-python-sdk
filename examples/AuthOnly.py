@@ -82,9 +82,7 @@ service.SetTestMode(1)
 
 #
 # Perform the Auth-Only transaction.
-status = service.PerformAuthOnly(request, response)
-
-if status:
+if service.PerformAuthOnly(request, response):
     print("Auth Only succeeded")
     print("GUID: ", response.Get(GatewayResponse.TRANSACT_ID))
     print("Response Code: ", response.Get(GatewayResponse.RESPONSE_CODE))
