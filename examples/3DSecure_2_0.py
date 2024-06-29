@@ -84,8 +84,8 @@ service.PerformPurchase(request, response)
 response_code = response.Get(GatewayResponse.RESPONSE_CODE)
 reason_code = response.Get(GatewayResponse.REASON_CODE)
 
-if (int(response_code) != GatewayCodes.RESPONSE_RISK_FAIL
-        and int(reason_code) != GatewayCodes.REASON_3DSECURE_INITIATION):
+if (response_code != GatewayCodes.RESPONSE_RISK_FAIL
+        and reason_code != GatewayCodes.REASON_3DSECURE_INITIATION):
     print("Response Code:", response_code)
     print("Reason Code:", reason_code)
     exit("error: expected response 2 and reason 225")
@@ -109,7 +109,7 @@ if service.PerformPurchase(request, response):
     print("GUID:", response.Get(GatewayResponse.TRANSACT_ID))
     print("Account:", response.Get(GatewayResponse.MERCHANT_ACCOUNT))
     print("Exception:", response.Get(GatewayResponse.EXCEPTION))
-elif int(response.Get(GatewayResponse.REASON_CODE)) == GatewayCodes.REASON_3DSECURE_AUTHENTICATION_REQUIRED:
+elif response.Get(GatewayResponse.REASON_CODE) == GatewayCodes.REASON_3DSECURE_AUTHENTICATION_REQUIRED:
     print("3DS Lookup succeeded")
     print("  GUID:", response.Get(GatewayResponse.TRANSACT_ID))
     print("  3DS Version:", response.Get(GatewayResponse._3DSECURE_VERSION))

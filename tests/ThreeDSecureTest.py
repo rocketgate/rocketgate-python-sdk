@@ -76,7 +76,7 @@ class ThreeDSecureTest(BaseTestCase):
         # Perform the Lookup transaction.
         self.service.PerformPurchase(self.request, self.response)
         reason_code = self.response.Get(GatewayResponse.REASON_CODE)  # reason code 202 is expected
-        self.assertTrue(int(reason_code) == GatewayCodes.REASON_3DSECURE_AUTHENTICATION_REQUIRED, "Perform 3D Lookup")
+        self.assertTrue(reason_code == GatewayCodes.REASON_3DSECURE_AUTHENTICATION_REQUIRED, "Perform 3D Lookup")
 
         # Setup the 2nd request.
         self.request = GatewayRequest()
