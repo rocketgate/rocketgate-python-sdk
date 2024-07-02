@@ -673,10 +673,8 @@ class GatewayService:
         response_code = response.Get(GatewayResponse.RESPONSE_CODE)
         reason_code = response.Get(GatewayResponse.REASON_CODE)
 
-        if response_code is None:
+        if response_code is None or reason_code is None:
             response.Set(GatewayResponse.RESPONSE_CODE, GatewayCodes.RESPONSE_REQUEST_ERROR)
-
-        if reason_code is None:
             response.Set(GatewayResponse.REASON_CODE, GatewayCodes.REASON_XML_ERROR)
 
         return response.Get(GatewayResponse.RESPONSE_CODE)  # Give back results
