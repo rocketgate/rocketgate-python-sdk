@@ -1,28 +1,32 @@
 #! /usr/bin/env python
-#
-# Copyright notice:
-# (c) Copyright 2020 RocketGate
-# All rights reserved.
-#
-# The copyright notice must not be removed without specific, prior
-# written permission from RocketGate.
-#
-# This software is protected as an unpublished work under the U.S. copyright
-# laws. The above copyright notice is not intended to effect a publication of
-# this work.
-# This software is the confidential and proprietary information of RocketGate.
-# Neither the binaries nor the source code may be redistributed without prior
-# written permission from RocketGate.
-#
-# The software is provided "as-is" and without warranty of any kind, express, implied
-# or otherwise, including without limitation, any warranty of merchantability or fitness
-# for a particular purpose.  In no event shall RocketGate be liable for any direct,
-# special, incidental, indirect, consequential or other damages of any kind, or any damages
-# whatsoever arising out of or in connection with the use or performance of this software,
-# including, without limitation, damages resulting from loss of use, data or profits, and
-# whether or not advised of the possibility of damage, regardless of the theory of liability.
-#
+
+"""
+Copyright notice:
+(c) Copyright 2024 RocketGate
+All rights reserved.
+
+The copyright notice must not be removed without specific, prior
+written permission from RocketGate.
+
+This software is protected as an unpublished work under the U.S. copyright
+laws. The above copyright notice is not intended to effect a publication of
+this work. This software is the confidential and proprietary information of RocketGate.
+Neither the binaries nor the source code may be redistributed without prior
+written permission from RocketGate.
+
+The software is provided "as-is" and without warranty of any kind, express, implied
+or otherwise, including without limitation, any warranty of merchantability or fitness
+for a particular purpose. In no event shall RocketGate be liable for any direct,
+special, incidental, indirect, consequential or other damages of any kind, or any damages
+whatsoever arising out of or in connection with the use or performance of this software,
+including, without limitation, damages resulting from loss of use, data or profits, and
+whether or not advised of the possibility of damage, regardless of the theory of liability.
+"""
+
 import datetime
+import sys
+import os
+sys.path.insert(0, os.path.abspath(os.path.join(os.path.dirname(__file__), '..')))
 from RocketGate import *
 
 
@@ -38,7 +42,7 @@ response = GatewayResponse()
 service = GatewayService()
 
 #
-#	Setup the nly request.
+#	Setup the only request.
 #
 request.Set(GatewayRequest.MERCHANT_ID, merch_id)
 request.Set(GatewayRequest.MERCHANT_PASSWORD, merch_password)
@@ -81,8 +85,7 @@ service.SetTestMode(1)
 #
 #      Perform the Purchase transaction.
 #
-status = service.PerformPurchase(request, response)
-if status:
+if service.PerformPurchase(request, response):
     print("Purchase succeeded")
     print("GUID: ", response.Get(GatewayResponse.TRANSACT_ID))
 
@@ -103,8 +106,7 @@ if status:
     request.Set(GatewayRequest.USERNAME, "Pythontest_user_updated")
     request.Set(GatewayRequest.CUSTOMER_PASSWORD, "Pythontest_pass_updated")
 
-    status = service.PerformRebillUpdate(request, response)
-    if status:
+    if service.PerformRebillUpdate(request, response):
         print("\nUpdate PI succeeded")
 
     else:
@@ -118,4 +120,3 @@ else:
     print("Exception: ", response.Get(GatewayResponse.EXCEPTION))
     print("Scrub: ", response.Get(GatewayResponse.SCRUB_RESULTS))
     exit()
-
