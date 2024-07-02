@@ -607,7 +607,7 @@ class GatewayService:
                 response.Set(GatewayResponse.EXCEPTION, str(results.status) + ": " + body)
                 response.Set(GatewayResponse.RESPONSE_CODE, GatewayCodes.RESPONSE_SYSTEM_ERROR)
                 response.Set(GatewayResponse.REASON_CODE, GatewayCodes.REASON_RESPONSE_READ_ERROR)
-                return int(GatewayCodes.RESPONSE_SYSTEM_ERROR)  # System error
+                return GatewayCodes.RESPONSE_SYSTEM_ERROR  # System error
 
         #
         #	If there was a timeout, return an error.
@@ -616,7 +616,7 @@ class GatewayService:
             response.Set(GatewayResponse.EXCEPTION, str(ex))
             response.Set(GatewayResponse.RESPONSE_CODE, GatewayCodes.RESPONSE_SYSTEM_ERROR)
             response.Set(GatewayResponse.REASON_CODE, GatewayCodes.REASON_UNABLE_TO_CONNECT)
-            return int(GatewayCodes.RESPONSE_SYSTEM_ERROR)  # System error
+            return GatewayCodes.RESPONSE_SYSTEM_ERROR  # System error
 
         #
         #	If the read timed out, return an error.
@@ -625,7 +625,7 @@ class GatewayService:
             response.Set(GatewayResponse.EXCEPTION, str(ex))
             response.Set(GatewayResponse.RESPONSE_CODE, GatewayCodes.RESPONSE_SYSTEM_ERROR)
             response.Set(GatewayResponse.REASON_CODE, GatewayCodes.REASON_RESPONSE_READ_TIMEOUT)
-            return int(GatewayCodes.RESPONSE_SYSTEM_ERROR)  # System error
+            return GatewayCodes.RESPONSE_SYSTEM_ERROR  # System error
 
         #
         #	If there was some other type of socket problem, return an error.
@@ -638,7 +638,7 @@ class GatewayService:
                 response.Set(GatewayResponse.REASON_CODE, GatewayCodes.REASON_UNABLE_TO_CONNECT)
             else:
                 response.Set(GatewayResponse.REASON_CODE, GatewayCodes.REASON_RESPONSE_READ_ERROR)
-            return int(GatewayCodes.RESPONSE_SYSTEM_ERROR)  # System error
+            return GatewayCodes.RESPONSE_SYSTEM_ERROR  # System error
 
         #
         #	Catch general exceptions.
@@ -647,7 +647,7 @@ class GatewayService:
             response.Set(GatewayResponse.EXCEPTION, str(ex))
             response.Set(GatewayResponse.RESPONSE_CODE, GatewayCodes.RESPONSE_SYSTEM_ERROR)
             response.Set(GatewayResponse.REASON_CODE, GatewayCodes.REASON_RESPONSE_READ_ERROR)
-            return int(GatewayCodes.RESPONSE_SYSTEM_ERROR)  # System error
+            return GatewayCodes.RESPONSE_SYSTEM_ERROR  # System error
 
         #
         #	Other exceptions must be caught too.
@@ -656,7 +656,7 @@ class GatewayService:
             response.Set(GatewayResponse.EXCEPTION, "Unhandled POST exception")
             response.Set(GatewayResponse.RESPONSE_CODE, GatewayCodes.RESPONSE_SYSTEM_ERROR)
             response.Set(GatewayResponse.REASON_CODE, GatewayCodes.REASON_RESPONSE_READ_ERROR)
-            return int(GatewayCodes.RESPONSE_SYSTEM_ERROR)  # System error
+            return GatewayCodes.RESPONSE_SYSTEM_ERROR  # System error
 
         #
         #	Clean up the connection when we are all done.
@@ -669,17 +669,17 @@ class GatewayService:
         #	Parse the response XML and return the response code.
         #
         response.SetFromXML(body)  # Set from response body
-        try:
-            response.Set(GatewayResponse.RESPONSE_CODE, response.Get(GatewayResponse.RESPONSE_CODE))
-        except:
+
+        response_code = response.Get(GatewayResponse.RESPONSE_CODE)
+        reason_code = response.Get(GatewayResponse.REASON_CODE)
+
+        if response_code is None:
             response.Set(GatewayResponse.RESPONSE_CODE, GatewayCodes.RESPONSE_REQUEST_ERROR)
 
-        try:
-            response.Set(GatewayResponse.REASON_CODE, response.Get(GatewayResponse.REASON_CODE))
-        except:
+        if reason_code is None:
             response.Set(GatewayResponse.REASON_CODE, GatewayCodes.REASON_XML_ERROR)
 
-        return int(response.Get(GatewayResponse.RESPONSE_CODE))  # Give back results
+        return response.Get(GatewayResponse.RESPONSE_CODE)  # Give back results
 
     def PerformTransaction(self, request, response):
         """Performs the transaction described in a gateway request."""
@@ -700,7 +700,7 @@ class GatewayService:
                 response.Set(GatewayResponse.EXCEPTION, str(ex))
                 response.Set(GatewayResponse.RESPONSE_CODE, GatewayCodes.RESPONSE_REQUEST_ERROR)
                 response.Set(GatewayResponse.REASON_CODE, GatewayCodes.REASON_INVALID_URL)
-                return int(GatewayCodes.RESPONSE_REQUEST_ERROR)  # Validation error: Invalid URL
+                return 0  # Validation error: Invalid URL
 
         #
         #	If the request specifies a server name, use it. Otherwise, use the default.
@@ -753,13 +753,13 @@ class GatewayService:
             #
             #	If the transaction was successful, we are done
             #
-            if results == 0:  # Success?
+            if results == GatewayCodes.RESPONSE_SUCCESS:  # Success?
                 return 1  # (TRUE) All done
 
             #
             #	If the transaction is not recoverable, quit.
             #
-            if results != 3:  # Unrecoverable?
+            if results != GatewayCodes.RESPONSE_SYSTEM_ERROR:  # Unrecoverable?
                 return 0  # (FALSE) Must quit
 
             #
@@ -832,7 +832,7 @@ class GatewayService:
         #	Send the transaction to the specified host.
         #
         results = self.SendTransaction(server_name, request, response)
-        if results == 0:  # Did server return 0?
+        if results == GatewayCodes.RESPONSE_SUCCESS:  # Did server return 0?
             return 1  # This succeeded
         return 0  # This failed
 
@@ -880,8 +880,7 @@ class GatewayService:
         """Performs a Ticket operation for a previous auth-only transaction."""
 
         request.Set(GatewayRequest.TRANSACTION_TYPE, "CC_TICKET")
-        results = self.PerformTargetedTransaction(request, response)
-        return results  # Return results
+        return self.PerformTargetedTransaction(request, response)  # Return results
 
     def PerformPurchase(self, request, response):
         """Performs a complete purchase transaction."""
@@ -912,22 +911,19 @@ class GatewayService:
         """Performs a Void operation for a previous transaction."""
 
         request.Set(GatewayRequest.TRANSACTION_TYPE, "CC_VOID")
-        results = self.PerformTargetedTransaction(request, response)
-        return results  # Return results
+        return self.PerformTargetedTransaction(request, response)  # Return results
 
     def PerformCardScrub(self, request, response):
         """Performs scrubbing on a card/customer"""
 
         request.Set(GatewayRequest.TRANSACTION_TYPE, "CARDSCRUB")
-        results = self.PerformTransaction(request, response)
-        return results  # Return results
+        return self.PerformTransaction(request, response)  # Return results
 
     def PerformRebillCancel(self, request, response):
         """Schedules cancellation of rebilling."""
 
         request.Set(GatewayRequest.TRANSACTION_TYPE, "REBILL_CANCEL")
-        results = self.PerformTransaction(request, response)
-        return results  # Return results
+        return self.PerformTransaction(request, response)  # Return results
 
     def PerformRebillUpdate(self, request, response):
         """Updates terms of a rebilling."""
@@ -939,8 +935,7 @@ class GatewayService:
         #
         amount = request.Get(GatewayRequest.AMOUNT)
         if amount is None:  # No charge?
-            results = self.PerformTransaction(request, response)
-            return results  # Return results
+            return self.PerformTransaction(request, response)  # Return results
 
         #
         #	If the amount will not result in a chage, just perform the update.
@@ -948,8 +943,7 @@ class GatewayService:
         try:  # Check the amount
             value = float(amount)  # Make sure this is valid
             if value <= 0.0:  # Not chargeable?
-                results = self.PerformTransaction(request, response)
-                return results  # Return results
+                return self.PerformTransaction(request, response)  # Return results
         except:  # Not a valid amount
             pass
 
@@ -965,8 +959,7 @@ class GatewayService:
         """Uploads card data to the servers."""
 
         request.Set(GatewayRequest.TRANSACTION_TYPE, "CARDUPLOAD")
-        results = self.PerformTransaction(request, response)
-        return results  # Return results
+        return self.PerformTransaction(request, response)  # Return results
 
     def PerformLookup(self, request, response):
         """Performs GUID lookup"""
